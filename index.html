@@ -1,67 +1,15 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Logaloga Studio Booking</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{font-family:Arial;background:#0b1e2d;color:#fff;margin:0}
-.container{max-width:420px;margin:40px auto;background:#0f2a3d;padding:20px;border-radius:10px}
-h1{text-align:center}
-select,input,button{width:100%;padding:10px;margin-top:10px;border-radius:5px;border:none}
-button{background:#1ccf7a;font-weight:bold;color:#000;cursor:pointer}
-.harga{margin-top:15px;font-size:20px;font-weight:bold;color:#1ccf7a}
-label{margin-top:10px;display:block}
-</style>
-</head>
-
-<body>
-<div class="container">
-<h1>LOGALOGA STUDIO</h1>
-
-<label>Pilih Layanan</label>
-<select id="layanan" oninput="updateForm()">
-  <option value="">-- Pilih --</option>
-  <option value="wisuda">Foto Wisuda</option>
-  <option value="umum">Foto Umum</option>
-</select>
-
-<label>Pilih Jam</label>
-<select id="jam">
-  <option value="">-- Pilih Jam --</option>
-  <option>09.00</option><option>10.00</option><option>11.00</option>
-  <option>12.00</option><option>13.00</option><option>14.00</option>
-  <option>15.00</option><option>16.00</option><option>17.00</option>
-  <option>18.00</option><option>19.00</option><option>20.00</option>
-  <option>21.00</option><option>22.00</option>
-</select>
-
-<div id="formWisuda" style="display:none">
-<label>Paket Wisuda</label>
-<select id="paketWisuda" oninput="hitungWisuda()">
-  <option value="">-- Pilih Paket --</option>
-  <option value="family">Family – Rp 350.000 (max 10)</option>
-  <option value="plus">Family Plus – Rp 675.000 (max 12)</option>
-</select>
-
-<input type="number" id="orangWisuda" placeholder="Jumlah orang" oninput="hitungWisuda()">
-</div>
-
-<div id="formUmum" style="display:none">
-<label>Jumlah Orang</label>
-<input type="number" id="orangUmum" placeholder="Jumlah orang" oninput="hitungUmum()">
-</div>
-
-<input id="nama" placeholder="Nama">
-<input id="hp" placeholder="No WhatsApp">
-
-<div class="harga" id="total">Total: -</div>
-
-<button onclick="kirimWA()">Booking via WhatsApp</button>
-</div>
-
 <script>
 const waNumber = "6282199327646";
+
+let DISKON_ON = false;
+let DISKON_PERSEN = 0;
+
+fetch("https://raw.githubusercontent.com/rizaltte1991-max/booking/main/config.json")
+.then(res => res.json())
+.then(cfg => {
+  DISKON_ON = cfg.diskon_on;
+  DISKON_PERSEN = cfg.diskon_persen;
+});
 
 const hargaUmum = {
 1:100000,2:200000,3:300000,4:320000,5:370000,6:400000,
@@ -74,54 +22,68 @@ const hargaUmum = {
 let totalHarga = 0;
 
 function updateForm(){
- const l = document.getElementById("layanan").value;
- document.getElementById("formWisuda").style.display = l=="wisuda"?"block":"none";
- document.getElementById("formUmum").style.display = l=="umum"?"block":"none";
- document.getElementById("total").innerText="Total: -";
+ const layanan = document.getElementById("layanan").value;
+ document.getElementById("formWisuda").style.display = layanan=="wisuda"?"block":"none";
+ document.getElementById("formUmum").style.display = layanan=="umum"?"block":"none";
+}
+
+function applyDiskon(harga){
+ if(DISKON_ON){
+   return harga - (harga * DISKON_PERSEN / 100);
+ }
+ return harga;
 }
 
 function hitungWisuda(){
- const paket=document.getElementById("paketWisuda").value;
- const orang=parseInt(document.getElementById("orangWisuda").value)||0;
- if(paket=="family") totalHarga=350000+(orang>10?(orang-10)*25000:0);
- if(paket=="plus") totalHarga=675000+(orang>12?(orang-12)*25000:0);
- document.getElementById("total").innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+ const paket = document.getElementById("paketWisuda").value;
+ const orang = parseInt(document.getElementById("orangWisuda").value) || 0;
+
+ if(paket=="family"){
+   totalHarga = 350000 + (orang>10?(orang-10)*25000:0);
+ }
+ if(paket=="plus"){
+   totalHarga = 675000 + (orang>12?(orang-12)*25000:0);
+ }
+
+ totalHarga = applyDiskon(totalHarga);
+ document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
 }
 
 function hitungUmum(){
- const orang=document.getElementById("orangUmum").value;
+ const orang = document.getElementById("orangUmum").value;
  if(hargaUmum[orang]){
-  totalHarga=hargaUmum[orang];
-  document.getElementById("total").innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+   totalHarga = applyDiskon(hargaUmum[orang]);
+   document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
  }
 }
 
 function kirimWA(){
- const nama=document.getElementById("nama").value;
- const hp=document.getElementById("hp").value;
- const layanan=document.getElementById("layanan").value;
- const jam=document.getElementById("jam").value;
- let detail="";
+ const nama = document.getElementById("nama").value;
+ const hp = document.getElementById("hp").value;
+ const layanan = document.getElementById("layanan").value;
+ const jam = document.getElementById("jam").value;
+
+ let detail = "";
 
  if(layanan=="wisuda"){
-  detail="Paket: "+paketWisuda.value+"%0AJumlah orang: "+orangWisuda.value;
+   detail = "Paket: " + document.getElementById("paketWisuda").value + "%0A" +
+            "Jumlah orang: " + document.getElementById("orangWisuda").value;
  }
+
  if(layanan=="umum"){
-  detail="Jumlah orang: "+orangUmum.value;
+   detail = "Jumlah orang: " + document.getElementById("orangUmum").value;
  }
 
- const pesan="Halo Logaloga Studio%0A"+
- "Nama: "+nama+"%0A"+
- "WA: "+hp+"%0A"+
- "Jam: "+jam+"%0A"+
- "Layanan: "+layanan+"%0A"+
- detail+"%0A"+
- "Total: Rp "+totalHarga.toLocaleString("id-ID");
+ const pesan =
+   "Halo Logaloga Studio%0A" +
+   "Nama: " + nama + "%0A" +
+   "WA: " + hp + "%0A" +
+   "Jam: " + jam + "%0A" +
+   "Layanan: " + layanan + "%0A" +
+   detail + "%0A" +
+   "Total: Rp " + totalHarga.toLocaleString("id-ID") +
+   (DISKON_ON ? "%0A(Diskon " + DISKON_PERSEN + "% aktif)" : "");
 
- window.open("https://wa.me/"+waNumber+"?text="+pesan,"_blank");
+ window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 </script>
-
-</body>
-</html>
- 
