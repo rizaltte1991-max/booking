@@ -1,73 +1,98 @@
-<script>
-const waNumber = "6282199327646";
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Logaloga Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial;background:#0b1c2d;color:white}
+header{padding:30px;text-align:center;background:#0b4c6f}
+.container{max-width:800px;margin:auto;padding:20px}
+.card{background:#12263a;padding:20px;border-radius:10px;margin-bottom:20px}
+select,input,button{width:100%;padding:12px;margin-top:10px;border:none;border-radius:5px;font-size:16px}
+button{background:#25D366;color:white;font-size:18px;cursor:pointer}
+.harga{font-size:26px;font-weight:bold;margin-top:15px;color:#00ffb3}
+</style>
+</head>
 
-const hargaUmum = {
+<body>
+
+<header>
+<h1>LOGALOGA STUDIO</h1>
+<p>Booking Foto Wisuda & Foto Umum</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<label>Pilih Layanan</label>
+<select id="layanan" onchange="updateForm()">
+<option value="">-- Pilih --</option>
+<option value="wisuda">Foto Wisuda</option>
+<option value="umum">Foto Umum</option>
+</select>
+</div>
+
+<div class="card" id="formWisuda" style="display:none">
+<h3>Foto Wisuda</h3>
+<select id="paketWisuda" oninput="hitungWisuda()">
+<option value="">Pilih Paket</option>
+<option value="family">Family - Rp350.000 (max 10 orang)</option>
+<option value="plus">Family Plus - Rp675.000 (max 12 orang)</option>
+</select>
+<input type="number" id="orangWisuda" placeholder="Jumlah orang" oninput="hitungWisuda()">
+</div>
+
+<div class="card" id="formUmum" style="display:none">
+<h3>Foto Umum</h3>
+<input type="number" id="orangUmum" placeholder="Jumlah orang" oninput="hitungUmum()">
+</div>
+
+<div class="card">
+<label>Pilih Jam</label>
+<select id="jam">
+<option value="">-- Pilih Jam --</option>
+<option>09.00 - 10.00</option><option>10.00 - 11.00</option>
+<option>11.00 - 12.00</option><option>12.00 - 13.00</option>
+<option>13.00 - 14.00</option><option>14.00 - 15.00</option>
+<option>15.00 - 16.00</option><option>16.00 - 17.00</option>
+<option>17.00 - 18.00</option><option>18.00 - 19.00</option>
+<option>19.00 - 20.00</option><option>20.00 - 21.00</option>
+<option>21.00 - 22.00</option>
+</select>
+</div>
+
+<div class="card">
+<input type="text" id="nama" placeholder="Nama">
+<input type="text" id="hp" placeholder="No WhatsApp">
+<div class="harga" id="total">Total: -</div>
+<button onclick="kirimWA()">Booking via WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+const waNumber="6282199327646";
+
+const hargaUmum={
 1:100000,2:200000,3:300000,4:320000,5:370000,6:400000,
-7:350000,8:400000,9:450000,10:500000
+7:350000,8:400000,9:450000,10:500000,11:440000,12:480000,
+13:520000,14:560000,15:600000,16:480000,17:510000,18:540000,
+19:570000,20:600000,21:630000,22:660000,23:690000,24:720000,
+25:750000,26:650000,27:675000,28:700000,29:725000,30:750000
 };
 
-let totalHarga = 0;
+let totalHarga=0;
 
 function updateForm(){
- const layanan = document.getElementById("layanan").value;
- document.getElementById("formWisuda").style.display = layanan=="wisuda"?"block":"none";
- document.getElementById("formUmum").style.display = layanan=="umum"?"block":"none";
+ let l=document.getElementById("layanan").value;
+ document.getElementById("formWisuda").style.display=l=="wisuda"?"block":"none";
+ document.getElementById("formUmum").style.display=l=="umum"?"block":"none";
  document.getElementById("total").innerText="Total: -";
 }
 
 function hitungWisuda(){
- const paket = document.getElementById("paketWisuda").value;
- const orang = parseInt(document.getElementById("orangWisuda").value) || 0;
-
- if(paket=="family"){
-   totalHarga = 350000 + (orang>10?(orang-10)*25000:0);
- }
- if(paket=="plus"){
-   totalHarga = 675000 + (orang>12?(orang-12)*25000:0);
- }
-
- document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
-}
-
-function hitungUmum(){
- const orang = parseInt(document.getElementById("orangUmum").value) || 0;
- if(hargaUmum[orang]){
-   totalHarga = hargaUmum[orang];
- } else {
-   totalHarga = 0;
- }
- document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
-}
-
-function kirimWA(){
- const nama = document.getElementById("nama").value;
- const hp = document.getElementById("hp").value;
- const jam = document.getElementById("jam").value;
- const layanan = document.getElementById("layanan").value;
-
- let detail = "";
-
- if(layanan=="wisuda"){
-   const paket = document.getElementById("paketWisuda").value;
-   const orang = document.getElementById("orangWisuda").value;
-   detail = "Paket: " + paket + "%0A" +
-            "Jumlah orang: " + orang;
- }
-
- if(layanan=="umum"){
-   const orang = document.getElementById("orangUmum").value;
-   detail = "Jumlah orang: " + orang;
- }
-
- const pesan =
-   "Halo Logaloga Studio%0A" +
-   "Nama: " + nama + "%0A" +
-   "WA: " + hp + "%0A" +
-   "Layanan: " + layanan + "%0A" +
-   "Jam: " + jam + "%0A" +
-   detail + "%0A" +
-   "Total: Rp " + totalHarga.toLocaleString("id-ID");
-
- window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
-}
-</script>
+ let p=document.getElementById("paketWisuda").value;
+ let o=parseInt(document.getElementById("orangWisuda").value)||0;
+ if(p=="family") totalHarga=350000+(o>10?(o-10)*25000:0);
+ if(p=="plus") totalHarga=675000+(o>12?(o-12)*25000:0);*
