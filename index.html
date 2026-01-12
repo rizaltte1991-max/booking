@@ -10,7 +10,8 @@ body{margin:0;background:#0b1e2d;font-family:Arial;color:#fff}
 h1{text-align:center}
 label{display:block;margin-top:10px}
 input,select,button{width:100%;padding:10px;margin-top:6px;border:none;border-radius:6px}
-button{background:#1fdc7c;color:#000;font-weight:bold;margin-top:15px;cursor:pointer}
+button{background:#1fdc7c;color:#000;font-weight:bold;margin-top:10px;cursor:pointer}
+#diskonBtn{background:#ff9800;color:#000}
 .harga{font-size:20px;font-weight:bold;color:#1fdc7c;margin-top:15px;text-align:center}
 </style>
 </head>
@@ -56,11 +57,14 @@ button{background:#1fdc7c;color:#000;font-weight:bold;margin-top:15px;cursor:poi
 
 <div class="harga" id="total">Total: -</div>
 
+<button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon</button>
 <button onclick="kirimWA()">Booking via WhatsApp</button>
 </div>
 
 <script>
 const waNumber="6282199327646";
+const diskonPersen=20;
+let diskonAktif=false;
 
 const hargaUmum={
 1:100000,2:200000,3:300000,4:320000,5:370000,6:400000,
@@ -72,11 +76,21 @@ const hargaUmum={
 
 let totalHarga=0;
 
+function toggleDiskon(){
+diskonAktif=!diskonAktif;
+diskonBtn.innerText=diskonAktif?"Matikan Diskon ("+diskonPersen+"%)":"Aktifkan Diskon";
+hitung();
+}
+
 function updateForm(){
 const l=layanan.value;
 formWisuda.style.display=l=="wisuda"?"block":"none";
 formUmum.style.display=l=="umum"?"block":"none";
 hitung();
+}
+
+function applyDiskon(h){
+return diskonAktif ? h - (h*diskonPersen/100) : h;
 }
 
 function hitung(){
@@ -87,14 +101,16 @@ if(layanan.value=="umum") hitungUmum();
 function hitungWisuda(){
 const paket=paketWisuda.value;
 const orang=parseInt(orangWisuda.value)||0;
-if(paket=="family") totalHarga=350000+(orang>10?(orang-10)*25000:0);
-if(paket=="plus") totalHarga=675000+(orang>12?(orang-12)*25000:0);
+let harga=0;
+if(paket=="family") harga=350000+(orang>10?(orang-10)*25000:0);
+if(paket=="plus") harga=675000+(orang>12?(orang-12)*25000:0);
+totalHarga=applyDiskon(harga);
 tampil();
 }
 
 function hitungUmum(){
 const orang=parseInt(orangUmum.value)||0;
-totalHarga=hargaUmum[orang]||0;
+totalHarga=applyDiskon(hargaUmum[orang]||0);
 tampil();
 }
 
@@ -107,6 +123,7 @@ if(!nama.value||!hp.value||!jam.value){alert("Lengkapi nama, WA & jam");return;}
 let detail="";
 if(layanan.value=="wisuda") detail="Paket: "+paketWisuda.value+"%0AJumlah orang: "+orangWisuda.value;
 if(layanan.value=="umum") detail="Jumlah orang: "+orangUmum.value;
+
 const pesan=
 "Halo Logaloga Studio%0A"+
 "Nama: "+nama.value+"%0A"+
@@ -114,7 +131,8 @@ const pesan=
 "Jam: "+jam.value+"%0A"+
 "Layanan: "+layanan.value+"%0A"+
 detail+"%0A"+
-"Total: Rp "+totalHarga.toLocaleString("id-ID");
+"Total: Rp "+totalHarga.toLocaleString("id-ID")+(diskonAktif?" (Diskon "+diskonPersen+"%)":"");
+
 window.open("https://wa.me/"+waNumber+"?text="+pesan,"_blank");
 }
 
@@ -126,3 +144,4 @@ orangUmum.oninput=hitungUmum;
 
 </body>
 </html>
+ 
