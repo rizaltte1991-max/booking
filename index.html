@@ -1,15 +1,5 @@
 <script>
-const waNumber = "6282199327646";
-
-let DISKON_ON = false;
-let DISKON_PERSEN = 0;
-
-fetch("https://raw.githubusercontent.com/rizaltte1991-max/booking/main/config.json")
-.then(res => res.json())
-.then(cfg => {
-  DISKON_ON = cfg.diskon_on;
-  DISKON_PERSEN = cfg.diskon_persen;
-});
+const waNumber = "6282199327646"; // nomor kamu
 
 const hargaUmum = {
 1:100000,2:200000,3:300000,4:320000,5:370000,6:400000,
@@ -27,13 +17,6 @@ function updateForm(){
  document.getElementById("formUmum").style.display = layanan=="umum"?"block":"none";
 }
 
-function applyDiskon(harga){
- if(DISKON_ON){
-   return harga - (harga * DISKON_PERSEN / 100);
- }
- return harga;
-}
-
 function hitungWisuda(){
  const paket = document.getElementById("paketWisuda").value;
  const orang = parseInt(document.getElementById("orangWisuda").value) || 0;
@@ -45,14 +28,13 @@ function hitungWisuda(){
    totalHarga = 675000 + (orang>12?(orang-12)*25000:0);
  }
 
- totalHarga = applyDiskon(totalHarga);
  document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
 }
 
 function hitungUmum(){
  const orang = document.getElementById("orangUmum").value;
  if(hargaUmum[orang]){
-   totalHarga = applyDiskon(hargaUmum[orang]);
+   totalHarga = hargaUmum[orang];
    document.getElementById("total").innerText = "Total: Rp " + totalHarga.toLocaleString("id-ID");
  }
 }
@@ -61,29 +43,32 @@ function kirimWA(){
  const nama = document.getElementById("nama").value;
  const hp = document.getElementById("hp").value;
  const layanan = document.getElementById("layanan").value;
- const jam = document.getElementById("jam").value;
 
  let detail = "";
 
  if(layanan=="wisuda"){
-   detail = "Paket: " + document.getElementById("paketWisuda").value + "%0A" +
-            "Jumlah orang: " + document.getElementById("orangWisuda").value;
+   const paket = document.getElementById("paketWisuda").value;
+   const orang = document.getElementById("orangWisuda").value;
+   detail = "Paket: " + paket + "%0A" +
+            "Jumlah orang: " + orang;
  }
 
  if(layanan=="umum"){
-   detail = "Jumlah orang: " + document.getElementById("orangUmum").value;
+   const orang = document.getElementById("orangUmum").value;
+   detail = "Jumlah orang: " + orang;
  }
 
  const pesan =
    "Halo Logaloga Studio%0A" +
    "Nama: " + nama + "%0A" +
    "WA: " + hp + "%0A" +
-   "Jam: " + jam + "%0A" +
    "Layanan: " + layanan + "%0A" +
    detail + "%0A" +
-   "Total: Rp " + totalHarga.toLocaleString("id-ID") +
-   (DISKON_ON ? "%0A(Diskon " + DISKON_PERSEN + "% aktif)" : "");
+   "Total: Rp " + totalHarga.toLocaleString("id-ID");
 
  window.open("https://wa.me/" + waNumber + "?text=" + pesan, "_blank");
 }
 </script>
+ 
+
+ 
