@@ -1,122 +1,34 @@
-<script>
-const waNumber="6282199327646";
-const diskonPersen=20;
-let diskonAktif=false;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Logaloga Studio Booking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;background:#0b1e2d;font-family:Arial;color:#fff}
+.container{max-width:420px;margin:30px auto;background:#102e45;padding:20px;border-radius:12px}
+h1{text-align:center}
+label{display:block;margin-top:10px}
+input,select,button{width:100%;padding:10px;margin-top:6px;border:none;border-radius:6px}
+button{background:#1fdc7c;color:#000;font-weight:bold;margin-top:10px;cursor:pointer}
+#diskonBtn{background:#ff9800;color:#000}
+.harga{font-size:20px;font-weight:bold;color:#1fdc7c;margin-top:15px;text-align:center}
+</style>
+</head>
 
-/* ===== HARGA 1–15 ===== */
-const hargaPaket = {
-  1:100000,
-  2:200000,
-  3:300000,
-  4:335000,
-  5:370000,
-  6:400000,
-  7:420000,
-  8:450000,
-  9:475000,
-  10:500000,
-  11:525000,
-  12:550000,
-  13:575000,
-  14:600000,
-  15:625000
-};
+<body>
+<div class="container">
+<h1>LOGALOGA STUDIO</h1>
 
-let totalHarga=0;
+<label>Layanan</label>
+<select id="layanan">
+ <option value="">-- Pilih --</option>
+ <option value="wisuda">Foto Wisuda</option>
+ <option value="umum">Foto Umum</option>
+</select>
 
-/* ===== DISKON ===== */
-function toggleDiskon(){
-  diskonAktif=!diskonAktif;
-  diskonBtn.innerText=diskonAktif?"Matikan Diskon ("+diskonPersen+"%)":"Aktifkan Diskon";
-  hitung();
-}
-
-function applyDiskon(h){
-  return diskonAktif ? h - (h*diskonPersen/100) : h;
-}
-
-/* ===== HITUNG HARGA ===== */
-function hitungHarga(jumlah){
-  if(jumlah>=26) return jumlah*25000;
-  if(jumlah>=16) return jumlah*35000;
-  return hargaPaket[jumlah]||0;
-}
-
-/* ===== HITUNG KOSTUM ===== */
-function hitungKostum(jumlah){
-  if(jumlah<=3) return 1;
-  if(jumlah<=10) return 2;
-  return 3;
-}
-
-/* ===== FORM ===== */
-function updateForm(){
-  const l=layanan.value;
-  formWisuda.style.display=l=="wisuda"?"block":"none";
-  formUmum.style.display=l=="umum"?"block":"none";
-  hitung();
-}
-
-function hitung(){
-  if(layanan.value=="wisuda") hitungWisuda();
-  if(layanan.value=="umum") hitungUmum();
-}
-
-/* ===== WISUDA ===== */
-function hitungWisuda(){
-  const paket=paketWisuda.value;
-  const orang=parseInt(orangWisuda.value)||0;
-  let harga=0;
-
-  if(paket=="family") harga=350000+(orang>10?(orang-10)*25000:0);
-  if(paket=="plus") harga=675000+(orang>12?(orang-12)*25000:0);
-
-  totalHarga=applyDiskon(harga);
-  tampil();
-}
-
-/* ===== FOTO UMUM ===== */
-function hitungUmum(){
-  const orang=parseInt(orangUmum.value)||0;
-  const harga=hitungHarga(orang);
-  totalHarga=applyDiskon(harga);
-  tampil();
-}
-
-/* ===== TAMPIL ===== */
-function tampil(){
-  total.innerText=totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
-}
-
-/* ===== KIRIM WA ===== */
-function kirimWA(){
-  if(!nama.value||!hp.value||!jam.value){alert("Lengkapi nama, WA & jam");return;}
-
-  let detail="";
-  if(layanan.value=="wisuda"){
-    detail="Paket: "+paketWisuda.value+"%0AJumlah orang: "+orangWisuda.value;
-  }
-
-  if(layanan.value=="umum"){
-    const orang=parseInt(orangUmum.value)||0;
-    const kostum=hitungKostum(orang);
-    detail="Jumlah orang: "+orang+"%0AKostum termasuk: "+kostum;
-  }
-
-  const pesan=
-  "Halo Logaloga Studio%0A"+
-  "Nama: "+nama.value+"%0A"+
-  "WA: "+hp.value+"%0A"+
-  "Jam: "+jam.value+"%0A"+
-  "Layanan: "+layanan.value+"%0A"+
-  detail+"%0A"+
-  "Total: Rp "+totalHarga.toLocaleString("id-ID")+(diskonAktif?" (Diskon "+diskonPersen+"%)":"");
-
-  window.open("https://wa.me/"+waNumber+"?text="+pesan,"_blank");
-}
-
-layanan.onchange=updateForm;
-paketWisuda.onchange=hitungWisuda;
-orangWisuda.oninput=hitungWisuda;
-orangUmum.oninput=hitungUmum;
-</script>
+<label>Jam Booking</label>
+<select id="jam">
+<option value="">-- Pilih Jam --</option>
+<option>09.00</option><option>10.00</option><option>11.00</option>
+<option>12.00</option><option>13.00</option><option>14.00</option>
