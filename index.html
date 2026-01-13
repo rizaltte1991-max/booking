@@ -110,21 +110,21 @@ tampil();
 }
 
 function hitungUmum(){
-const orang=parseInt(orangUmum.value)||0;
-let harga=0;
+ const orang = parseInt(orangUmum.value) || 0;
+ let harga = 0;
 
-if(orang>=26){
-  harga = orang * 25000;
-}
-else if(orang>=16){
-  harga = orang * 35000;
-}
-else{
-  harga = hargaPaket[orang] || 0;
-}
+ if(orang >= 26){
+   harga = orang * 25000;
+ }
+ else if(orang >= 16){
+   harga = orang * 35000;
+ }
+ else{
+   harga = hargaPaket[orang] || 0;
+ }
 
-totalHarga = applyDiskon(harga);
-tampil();
+ totalHarga = applyDiskon(harga);
+ tampil();
 }
 
 function tampil(){
@@ -158,3 +158,4 @@ orangUmum.oninput=hitungUmum;
 </body>
 </html>
  
+
