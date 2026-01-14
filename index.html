@@ -70,70 +70,44 @@ Tambahan kostum: <b>Rp 50.000 / kostum</b>
 
 <script>
 // =======================
-// SETTING DASAR
+// SETTING
 // =======================
 const waNumber = "6282199327646";
 const diskonPersen = 10;
 let diskonAktif = false;
 
 // =======================
-// HARGA FOTO UMUM (FINAL)
+// HARGA
 // =======================
 const hargaUmum = {
-  1:100000,
-  2:200000,
-  3:300000,
-  4:335000,
-  5:370000,
-  6:400000,
-  7:420000,
-  8:450000,
-  9:475000,
-  10:500000,
-  11:525000,
-  12:550000,
-  13:575000,
-  14:600000,
-  15:625000,
-  16:560000,
-  17:595000,
-  18:630000,
-  19:665000,
-  20:700000,
-  21:735000,
-  22:770000,
-  23:805000,
-  24:840000,
-  25:875000,
-  26:650000,
-  27:675000,
-  28:700000,
-  29:725000,
-  30:750000
+  1:100000,2:200000,3:300000,4:335000,5:370000,6:400000,
+  7:420000,8:450000,9:475000,10:500000,11:525000,12:550000,
+  13:575000,14:600000,15:625000,16:560000,17:595000,18:630000,
+  19:665000,20:700000,21:735000,22:770000,23:805000,24:840000,
+  25:875000,26:650000,27:675000,28:700000,29:725000,30:750000
 };
 
-// =======================
-// DEADLINE DISKON
-// =======================
 const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
-
-// =======================
-// VARIABEL GLOBAL
-// =======================
 let totalHarga = 0;
 
 // =======================
-// FUNGSI DISKON
+// DISKON
 // =======================
-
 function applyDiskon(h){
   return (diskonAktif && new Date() <= diskonDeadline)
     ? h - (h * diskonPersen / 100)
     : h;
 }
 
+function toggleDiskon(){
+  if(new Date() > diskonDeadline) return;
+  diskonAktif = !diskonAktif;
+  diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
+  hitung();
+}
+
 // =======================
-// HITUNG HARGA
+// HITUNG
 // =======================
 function hitung(){
   if(layanan.value=="wisuda") hitungWisuda();
@@ -144,23 +118,21 @@ function hitungWisuda(){
   const paket = paketWisuda.value;
   const orang = parseInt(orangWisuda.value)||0;
   let harga = 0;
-
   if(paket=="family") harga = 350000 + (orang>10 ? (orang-10)*25000 : 0);
   if(paket=="plus") harga = 675000 + (orang>12 ? (orang-12)*25000 : 0);
-
   totalHarga = applyDiskon(harga);
   tampil();
 }
 
 function hitungUmum(){
-   const orang = parseInt(orangUmum.value)||0;
+  const orang = parseInt(orangUmum.value)||0;
   const harga = hargaUmum[orang] || 0;
   totalHarga = applyDiskon(harga);
   tampil();
 }
 
 // =======================
-// TAMPILKAN TOTAL
+// TAMPIL
 // =======================
 function tampil(){
   total.innerText = totalHarga>0
@@ -169,7 +141,7 @@ function tampil(){
 }
 
 // =======================
-// COUNTDOWN DISKON
+// TIMER
 // =======================
 function updateCountdown(){
   const now = new Date();
@@ -197,51 +169,8 @@ setInterval(updateCountdown,1000);
 updateCountdown();
 
 // =======================
-// EVENT LISTENER
+// EVENT
 // =======================
- /* =======================
-   TIMER DISKON
-   Berakhir 28 Jan 2026 22:00 WIB
-======================= */
-
-const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
-
-function updateCountdown(){
-  const now = new Date();
-  const diff = diskonDeadline - now;
-
-  if(diff <= 0){
-    diskonAktif = false;
-    diskonBtn.disabled = true;
-    diskonBtn.innerText = "Diskon Berakhir";
-    document.getElementById("countdown").innerText = "Promo diskon telah berakhir";
-    hitung();
-    return;
-  }
-
-  const hari = Math.floor(diff / (1000*60*60*24));
-  const jam  = Math.floor((diff / (1000*60*60)) % 24);
-  const menit = Math.floor((diff / (1000*60)) % 60);
-  const detik = Math.floor((diff / 1000) % 60);
-
-  document.getElementById("countdown").innerText =
-    "Diskon 10% berakhir dalam " + hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
-}
- 
-/* =======================
-   KUNCI TOGGLE DISKON
-======================= */
-
-function toggleDiskon(){
-  if(new Date() > diskonDeadline) return;
-
-  diskonAktif = !diskonAktif;
-  diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
-  hitung();
-}
-setInterval(updateCountdown,1000);
-updateCountdown();
- 
 layanan.onchange = updateForm;
 paketWisuda.onchange = hitungWisuda;
 orangWisuda.oninput = hitungWisuda;
@@ -252,6 +181,7 @@ orangUmum.oninput = hitungUmum;
 </body>
 </html>
  
+
 
 
 
