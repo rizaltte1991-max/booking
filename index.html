@@ -69,7 +69,10 @@ const hargaUmum={
 };
 
 const diskonDeadline=new Date("2026-01-28T22:00:00+07:00");
+
 let totalHarga=0;
+let extraKostum=0;
+const hargaKostum=50000;
 
 function applyDiskon(h){
  return (diskonAktif && new Date()<=diskonDeadline)?h-(h*diskonPersen/100):h;
@@ -83,20 +86,22 @@ function hitungUmum(){
  const orang=parseInt(orangUmum.value)||0;
  const harga=hargaUmum[orang]||0;
 
- // aturan kostum (khusus Foto Umum)
  let kostum=0;
  if(orang>=1 && orang<=3) kostum=1;
  else if(orang>=4 && orang<=15) kostum=2;
  else if(orang>=16 && orang<=30) kostum=3;
 
- totalHarga=applyDiskon(harga);
+ let total=harga + (extraKostum*hargaKostum);
+ totalHarga=applyDiskon(total);
  tampil();
 
  if(orang>0){
-   kostumInfo.innerText="Kostum dari klien: "+kostum+" set (tambahan Rp50.000 / kostum jika lebih)";
- }else{
-   kostumInfo.innerText="";
- }
+   kostumInfo.innerText=
+    "Kostum dari klien: "+kostum+" set | Tambahan: "+extraKostum+
+    " (Rp50.000 / kostum)";
+ }else kostumInfo.innerText="";
+
+ tambahKostumBtn.style.display = diskonAktif ? "block" : "none";
 }
 
 function hitungWisuda(){
@@ -105,15 +110,19 @@ function hitungWisuda(){
  let harga=0;
  if(paket=="family") harga=350000+(orang>10?(orang-10)*25000:0);
  if(paket=="plus") harga=675000+(orang>12?(orang-12)*25000:0);
+
  totalHarga=applyDiskon(harga);
  tampil();
- kostumInfo.innerText=""; // tidak ada kostum untuk wisuda
+ kostumInfo.innerText="";
+ tambahKostumBtn.style.display="none";
 }
 
 function updateForm(){
+ extraKostum=0;
  formWisuda.style.display=layanan.value=="wisuda"?"block":"none";
  formUmum.style.display=layanan.value=="umum"?"block":"none";
  kostumInfo.innerText="";
+ tambahKostumBtn.style.display="none";
 }
 
 function toggleDiskon(){
@@ -121,6 +130,12 @@ function toggleDiskon(){
  diskonAktif=!diskonAktif;
  diskonBtn.innerText=diskonAktif?"Matikan Diskon":"Aktifkan Diskon";
  if(layanan.value=="wisuda")hitungWisuda();else hitungUmum();
+}
+
+function tambahKostum(){
+ if(!diskonAktif)return alert("Aktifkan diskon untuk tambah kostum");
+ extraKostum++;
+ hitungUmum();
 }
 
 function updateCountdown(){
@@ -151,5 +166,6 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
