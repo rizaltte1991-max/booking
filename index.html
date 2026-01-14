@@ -70,24 +70,32 @@ Tambahan kostum: <b>Rp 50.000 / kostum</b>
 
 <script>
 // =======================
-// SETTING
+// SETTING DASAR
 // =======================
 const waNumber = "6282199327646";
 const diskonPersen = 10;
 let diskonAktif = false;
 
 // =======================
-// HARGA
+// HARGA FOTO UMUM (FINAL)
 // =======================
 const hargaUmum = {
-  1:100000,2:200000,3:300000,4:335000,5:370000,6:400000,
-  7:420000,8:450000,9:475000,10:500000,11:525000,12:550000,
-  13:575000,14:600000,15:625000,16:560000,17:595000,18:630000,
-  19:665000,20:700000,21:735000,22:770000,23:805000,24:840000,
-  25:875000,26:650000,27:675000,28:700000,29:725000,30:750000
+  1:100000,  2:200000,  3:300000,  4:335000,  5:370000,
+  6:400000,  7:420000,  8:450000,  9:475000,  10:500000,
+  11:525000, 12:550000, 13:575000, 14:600000, 15:625000,
+  16:560000, 17:595000, 18:630000, 19:665000, 20:700000,
+  21:735000, 22:770000, 23:805000, 24:840000, 25:875000,
+  26:650000, 27:675000, 28:700000, 29:725000, 30:750000
 };
 
+// =======================
+// DEADLINE DISKON
+// =======================
 const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
+
+// =======================
+// VARIABEL
+// =======================
 let totalHarga = 0;
 
 // =======================
@@ -99,6 +107,66 @@ function applyDiskon(h){
     : h;
 }
 
+// =======================
+// FORM
+// =======================
+function updateForm(){
+  const l = layanan.value;
+  formWisuda.style.display = l === "wisuda" ? "block" : "none";
+  formUmum.style.display = l === "umum" ? "block" : "none";
+  hitung();
+}
+
+// =======================
+// HITUNG WISUDA
+// =======================
+function hitungWisuda(){
+  const paket = paketWisuda.value;
+  const orang = parseInt(orangWisuda.value) || 0;
+  let harga = 0;
+
+  if(paket === "family"){
+    harga = 350000 + (orang > 10 ? (orang - 10) * 25000 : 0);
+  }
+
+  if(paket === "plus"){
+    harga = 675000 + (orang > 12 ? (orang - 12) * 25000 : 0);
+  }
+
+  totalHarga = applyDiskon(harga);
+  tampil();
+}
+
+// =======================
+// HITUNG UMUM
+// =======================
+function hitungUmum(){
+  const orang = parseInt(orangUmum.value) || 0;
+  const harga = hargaUmum[orang] || 0;
+  totalHarga = applyDiskon(harga);
+  tampil();
+}
+
+// =======================
+// HITUNG UTAMA
+// =======================
+function hitung(){
+  if(layanan.value === "wisuda") hitungWisuda();
+  if(layanan.value === "umum") hitungUmum();
+}
+
+// =======================
+// TAMPILKAN TOTAL
+// =======================
+function tampil(){
+  total.innerText = totalHarga > 0
+    ? "Total: Rp " + totalHarga.toLocaleString("id-ID")
+    : "Total: -";
+}
+
+// =======================
+// TOGGLE DISKON
+// =======================
 function toggleDiskon(){
   if(new Date() > diskonDeadline) return;
   diskonAktif = !diskonAktif;
@@ -107,52 +175,16 @@ function toggleDiskon(){
 }
 
 // =======================
-// HITUNG
-// =======================
-function hitung(){
-  if(layanan.value=="wisuda") hitungWisuda();
-  if(layanan.value=="umum") hitungUmum();
-}
-
-function hitungWisuda(){
-  const paket = paketWisuda.value;
-  const orang = parseInt(orangWisuda.value)||0;
-  let harga = 0;
-  if(paket=="family") harga = 350000 + (orang>10 ? (orang-10)*25000 : 0);
-  if(paket=="plus") harga = 675000 + (orang>12 ? (orang-12)*25000 : 0);
-  totalHarga = applyDiskon(harga);
-  tampil();
-}
-
-function hitungUmum(){
-  const orang = parseInt(orangUmum.value)||0;
-  const harga = hargaUmum[orang] || 0;
-  totalHarga = applyDiskon(harga);
-  tampil();
-}
-
-// =======================
-// TAMPIL
-// =======================
-function tampil(){
-  total.innerText = totalHarga>0
-    ? "Total: Rp " + totalHarga.toLocaleString("id-ID")
-    : "Total: -";
-}
-
-// =======================
-// TIMER
+// COUNTDOWN
 // =======================
 function updateCountdown(){
   const now = new Date();
   const diff = diskonDeadline - now;
 
   if(diff <= 0){
-    diskonAktif = false;
+    countdown.innerText = "Diskon telah berakhir";
     diskonBtn.disabled = true;
     diskonBtn.innerText = "Diskon Berakhir";
-    document.getElementById("countdown").innerText = "Promo diskon telah berakhir";
-    hitung();
     return;
   }
 
@@ -161,8 +193,9 @@ function updateCountdown(){
   const menit = Math.floor((diff / (1000*60)) % 60);
   const detik = Math.floor((diff / 1000) % 60);
 
-  document.getElementById("countdown").innerText =
-    "Diskon 10% berakhir dalam " + hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
+  countdown.innerText =
+    "Diskon 10% berakhir dalam " +
+    hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
 }
 
 setInterval(updateCountdown,1000);
@@ -175,12 +208,12 @@ layanan.onchange = updateForm;
 paketWisuda.onchange = hitungWisuda;
 orangWisuda.oninput = hitungWisuda;
 orangUmum.oninput = hitungUmum;
-
 </script>
 
 </body>
 </html>
  
+
 
 
 
