@@ -80,8 +80,22 @@ function tampil(){
 
 function hitungUmum(){
  const orang=parseInt(orangUmum.value)||0;
- totalHarga=applyDiskon(hargaUmum[orang]||0);
+ const harga=hargaUmum[orang]||0;
+
+ // aturan kostum (khusus Foto Umum)
+ let kostum=0;
+ if(orang>=1 && orang<=3) kostum=1;
+ else if(orang>=4 && orang<=15) kostum=2;
+ else if(orang>=16 && orang<=30) kostum=3;
+
+ totalHarga=applyDiskon(harga);
  tampil();
+
+ if(orang>0){
+   kostumInfo.innerText="Kostum dari klien: "+kostum+" set (tambahan Rp50.000 / kostum jika lebih)";
+ }else{
+   kostumInfo.innerText="";
+ }
 }
 
 function hitungWisuda(){
@@ -92,11 +106,13 @@ function hitungWisuda(){
  if(paket=="plus") harga=675000+(orang>12?(orang-12)*25000:0);
  totalHarga=applyDiskon(harga);
  tampil();
+ kostumInfo.innerText=""; // tidak ada kostum untuk wisuda
 }
 
 function updateForm(){
  formWisuda.style.display=layanan.value=="wisuda"?"block":"none";
  formUmum.style.display=layanan.value=="umum"?"block":"none";
+ kostumInfo.innerText="";
 }
 
 function toggleDiskon(){
@@ -134,3 +150,4 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
