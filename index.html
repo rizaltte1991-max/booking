@@ -69,6 +69,16 @@ Tambahan kostum: <b>Rp 50.000 / kostum</b>
 <button onclick="kirimWA()">Booking via WhatsApp</button>
 
 <script>
+// =======================
+// SETTING DASAR
+// =======================
+const waNumber = "6282199327646";
+const diskonPersen = 10;
+let diskonAktif = false;
+
+// =======================
+// HARGA FOTO UMUM (FINAL)
+// =======================
 const hargaUmum = {
   1:100000,
   2:200000,
@@ -102,101 +112,100 @@ const hargaUmum = {
   30:750000
 };
 
-// Deadline diskon: 28 Januari 2026 jam 22:00 WIB
+// =======================
+// DEADLINE DISKON
+// =======================
 const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
 
-/* Harga 1–15 */
-const hargaPaket = {
-  1:100000, 2:200000, 3:300000,
-  4:335000, 5:370000, 6:400000,
-  7:420000, 8:450000, 9:475000,
-  10:500000, 11:525000, 12:550000,
-  13:575000, 14:600000, 15:625000
-};
+// =======================
+// VARIABEL GLOBAL
+// =======================
+let totalHarga = 0;
 
-let totalHarga=0;
+// =======================
+// FUNGSI DISKON
+// =======================
+function applyDiskon(h){
+  return (diskonAktif && new Date() <= diskonDeadline)
+    ? h - (h * diskonPersen / 100)
+    : h;
+}
 
 function toggleDiskon(){
   if(new Date() > diskonDeadline) return;
-
   diskonAktif = !diskonAktif;
   diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
   hitung();
 }
 
-function updateForm(){
-const l=layanan.value;
-formWisuda.style.display=l=="wisuda"?"block":"none";
-formUmum.style.display=l=="umum"?"block":"none";
-hitung();
-}
-
-function applyDiskon(h){
-return diskonAktif ? h - (h*diskonPersen/100) : h;
-}
-
+// =======================
+// HITUNG HARGA
+// =======================
 function hitung(){
-if(layanan.value=="wisuda") hitungWisuda();
-if(layanan.value=="umum") hitungUmum();
+  if(layanan.value=="wisuda") hitungWisuda();
+  if(layanan.value=="umum") hitungUmum();
 }
 
 function hitungWisuda(){
-const paket=paketWisuda.value;
-const orang=parseInt(orangWisuda.value)||0;
-let harga=0;
-if(paket=="family") harga=350000+(orang>10?(orang-10)*25000:0);
-if(paket=="plus") harga=675000+(orang>12?(orang-12)*25000:0);
-totalHarga=applyDiskon(harga);
-tampil();
+  const paket = paketWisuda.value;
+  const orang = parseInt(orangWisuda.value)||0;
+  let harga = 0;
+
+  if(paket=="family") harga = 350000 + (orang>10 ? (orang-10)*25000 : 0);
+  if(paket=="plus") harga = 675000 + (orang>12 ? (orang-12)*25000 : 0);
+
+  totalHarga = applyDiskon(harga);
+  tampil();
 }
 
 function hitungUmum(){
- const orang = parseInt(orangUmum.value) || 0;
- let harga = 0;
-
- if(orang >= 26){
-   harga = orang * 25000;
- }
- else if(orang >= 16){
-   harga = orang * 35000;
- }
- else{
-   harga = hargaPaket[orang] || 0;
- }
-
- totalHarga = applyDiskon(harga);
- tampil();
+  const orang = parseInt(orangUmum.value)||0;
+  const harga = hargaUmum[orang] || 0;
+  totalHarga = applyDiskon(harga);
+  tampil();
 }
 
-
+// =======================
+// TAMPILKAN TOTAL
+// =======================
 function tampil(){
-total.innerText=totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
+  total.innerText = totalHarga>0
+    ? "Total: Rp " + totalHarga.toLocaleString("id-ID")
+    : "Total: -";
 }
 
-function kirimWA(){
-if(!nama.value||!hp.value||!jam.value){alert("Lengkapi nama, WA & jam");return;}
-let detail="";
-if(layanan.value=="wisuda") detail="Paket: "+paketWisuda.value+"%0AJumlah orang: "+orangWisuda.value;
-if(layanan.value=="umum") detail="Jumlah orang: "+orangUmum.value;
+// =======================
+// COUNTDOWN DISKON
+// =======================
+function updateCountdown(){
+  const now = new Date();
+  const diff = diskonDeadline - now;
 
-const pesan=
-"Halo Logaloga Studio%0A"+
-"Nama: "+nama.value+"%0A"+
-"WA: "+hp.value+"%0A"+
-"Jam: "+jam.value+"%0A"+
-"Layanan: "+layanan.value+"%0A"+
-detail+"%0A"+
-"Total: Rp "+totalHarga.toLocaleString("id-ID")+(diskonAktif?" (Diskon "+diskonPersen+"%)":"");
+  if(diff <= 0){
+    diskonAktif = false;
+    diskonBtn.disabled = true;
+    diskonBtn.innerText = "Diskon Berakhir";
+    document.getElementById("countdown").innerText = "Promo diskon telah berakhir";
+    hitung();
+    return;
+  }
 
-window.open("https://wa.me/"+waNumber+"?text="+pesan,"_blank");
+  const hari = Math.floor(diff / (1000*60*60*24));
+  const jam  = Math.floor((diff / (1000*60*60)) % 24);
+  const menit = Math.floor((diff / (1000*60)) % 60);
+  const detik = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("countdown").innerText =
+    "Diskon 10% berakhir dalam " + hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
 }
 
-layanan.onchange=updateForm;
-paketWisuda.onchange=hitungWisuda;
-orangWisuda.oninput=hitungWisuda;
-orangUmum.oninput=hitungUmum;
+setInterval(updateCountdown,1000);
+updateCountdown();
 
-/* =======================
+// =======================
+// EVENT LISTENER
+// =======================
+ /* =======================
    TIMER DISKON
    Berakhir 28 Jan 2026 22:00 WIB
 ======================= */
@@ -224,10 +233,7 @@ function updateCountdown(){
   document.getElementById("countdown").innerText =
     "Diskon 10% berakhir dalam " + hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
 }
-
-setInterval(updateCountdown,1000);
-updateCountdown();
-
+ 
 /* =======================
    KUNCI TOGGLE DISKON
 ======================= */
@@ -239,11 +245,20 @@ function toggleDiskon(){
   diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
   hitung();
 }
+setInterval(updateCountdown,1000);
+updateCountdown();
+ 
+layanan.onchange = updateForm;
+paketWisuda.onchange = hitungWisuda;
+orangWisuda.oninput = hitungWisuda;
+orangUmum.oninput = hitungUmum;
+
 </script>
 
 </body>
 </html>
  
+
 
 
 
