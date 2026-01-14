@@ -131,11 +131,10 @@ function applyDiskon(h){
     : h;
 }
 
-function toggleDiskon(){
-  if(new Date() > diskonDeadline) return;
-  diskonAktif = !diskonAktif;
-  diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
-  hitung();
+function applyDiskon(h){
+  return (diskonAktif && new Date() <= diskonDeadline)
+    ? h - (h * diskonPersen / 100)
+    : h;
 }
 
 // =======================
@@ -258,6 +257,7 @@ orangUmum.oninput = hitungUmum;
 </body>
 </html>
  
+
 
 
 
