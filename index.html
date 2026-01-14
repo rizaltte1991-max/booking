@@ -125,11 +125,6 @@ let totalHarga = 0;
 // =======================
 // FUNGSI DISKON
 // =======================
-function applyDiskon(h){
-  return (diskonAktif && new Date() <= diskonDeadline)
-    ? h - (h * diskonPersen / 100)
-    : h;
-}
 
 function applyDiskon(h){
   return (diskonAktif && new Date() <= diskonDeadline)
@@ -257,6 +252,7 @@ orangUmum.oninput = hitungUmum;
 </body>
 </html>
  
+
 
 
 
