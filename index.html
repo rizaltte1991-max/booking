@@ -64,13 +64,17 @@ button{background:#1fdc7c;color:#000;font-weight:bold;margin-top:10px;cursor:poi
 Tambahan kostum: <b>Rp 50.000 / kostum</b>
 </div>
 
+<div id="countdown" style="text-align:center;font-size:13px;margin-top:10px;color:#ffcc80"></div>
 <button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon</button>
 <button onclick="kirimWA()">Booking via WhatsApp</button>
 
 <script>
 const waNumber="6282199327646";
-const diskonPersen=10;
-let diskonAktif=false;
+const diskonPersen = 10;
+let diskonAktif = true; // diskon otomatis ON
+
+// Deadline diskon: 28 Januari 2026 jam 22:00 WIB
+const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
 
 /* Harga 1–15 */
 const hargaPaket = {
@@ -160,11 +164,56 @@ layanan.onchange=updateForm;
 paketWisuda.onchange=hitungWisuda;
 orangWisuda.oninput=hitungWisuda;
 orangUmum.oninput=hitungUmum;
+
+/* =======================
+   TIMER DISKON
+   Berakhir 28 Jan 2026 22:00 WIB
+======================= */
+
+const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
+
+function updateCountdown(){
+  const now = new Date();
+  const diff = diskonDeadline - now;
+
+  if(diff <= 0){
+    diskonAktif = false;
+    diskonBtn.disabled = true;
+    diskonBtn.innerText = "Diskon Berakhir";
+    document.getElementById("countdown").innerText = "Promo diskon telah berakhir";
+    hitung();
+    return;
+  }
+
+  const hari = Math.floor(diff / (1000*60*60*24));
+  const jam  = Math.floor((diff / (1000*60*60)) % 24);
+  const menit = Math.floor((diff / (1000*60)) % 60);
+  const detik = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("countdown").innerText =
+    "Diskon 10% berakhir dalam " + hari + " hari " + jam + " jam " + menit + " menit " + detik + " detik";
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* =======================
+   KUNCI TOGGLE DISKON
+======================= */
+
+function toggleDiskon(){
+  if(new Date() > diskonDeadline) return;
+
+  diskonAktif = !diskonAktif;
+  diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
+  hitung();
+}
 </script>
 
 </body>
 </html>
  
+
 
 
 
