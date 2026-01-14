@@ -69,9 +69,13 @@ Tambahan kostum: <b>Rp 50.000 / kostum</b>
 <button onclick="kirimWA()">Booking via WhatsApp</button>
 
 <script>
-const waNumber="6282199327646";
+const waNumber = "6282199327646";
 const diskonPersen = 10;
-let diskonAktif = true; // diskon otomatis ON
+let diskonAktif = false;
+
+const hargaUmum = {
+  // … daftar harga kamu yang sudah final
+};
 
 // Deadline diskon: 28 Januari 2026 jam 22:00 WIB
 const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
@@ -88,9 +92,11 @@ const hargaPaket = {
 let totalHarga=0;
 
 function toggleDiskon(){
-diskonAktif=!diskonAktif;
-diskonBtn.innerText=diskonAktif?"Matikan Diskon ("+diskonPersen+"%)":"Aktifkan Diskon";
-hitung();
+  if(new Date() > diskonDeadline) return;
+
+  diskonAktif = !diskonAktif;
+  diskonBtn.innerText = diskonAktif ? "Matikan Diskon" : "Aktifkan Diskon";
+  hitung();
 }
 
 function updateForm(){
@@ -213,6 +219,7 @@ function toggleDiskon(){
 </body>
 </html>
  
+
 
 
 
