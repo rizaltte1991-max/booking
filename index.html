@@ -173,6 +173,7 @@ function hitungWisuda(){
   let hargaDasar = paket=="family"?350000:675000;
 
   let biayaTambahan = orang>maxOrang ? (orang-maxOrang)*25000 : 0;
+  
   totalHarga = hargaDasar + biayaTambahan;
 
   total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileFoto} File Foto)`;
@@ -290,5 +291,6 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </body>
 </html>
  
+
 
 
