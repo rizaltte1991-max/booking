@@ -43,6 +43,7 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
 </div>
 
 <!-- Form Wisuda (Baru) -->
+<!-- Form Wisuda + Info Lengkap -->
 <div id="formWisuda" style="display:none">
   <label>Paket Wisuda:</label>
   <select id="paketWisuda">
@@ -53,19 +54,49 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <label>Jumlah Orang (Wisuda):</label>
   <input type="number" id="orangWisuda" min="1" placeholder="Jumlah orang">
 
-  <!-- Info tambahan jika jumlah orang melebihi limit -->
-  <div class="info hidden" id="tambahanInfoWisuda"></div>
+  <!-- Info lengkap: max orang, tambahan, file -->
+  <div class="info" id="infoWisuda"></div>
 </div>
 
-<button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
+<script>
+const paketWisuda = document.getElementById("paketWisuda");
+const orangWisuda = document.getElementById("orangWisuda");
+const infoWisuda = document.getElementById("infoWisuda");
+const total = document.getElementById("total"); // total global
+let totalHarga = 0;
 
-<div id="total">Total: -</div>
-<div id="kostumInfo"></div>
-<div id="countdown"></div>
+function hitungWisuda(){
+  const paket = paketWisuda.value;
+  const orang = parseInt(orangWisuda.value)||0;
 
-<button onclick="kirimWA()">Kirim WA</button>
-</div>
+  // Data paket
+  let maxOrang = paket=="family"?10:12;
+  let fileFoto = paket=="family"?15:30;
+  let hargaDasar = paket=="family"?350000:675000;
 
+  // Hitung biaya tambahan jika orang melebihi limit
+  let tambahanOrang = orang>maxOrang ? orang - maxOrang : 0;
+  let biayaTambahan = tambahanOrang * 25000;
+  let totalPaket = hargaDasar + biayaTambahan;
+
+  totalHarga = totalPaket;
+  total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
+
+  // Update infoWisuda selalu
+  let infoText = `Max orang: ${maxOrang} | File foto: ${fileFoto}`;
+  if(tambahanOrang>0){
+    infoText += ` | Tambahan orang: ${tambahanOrang} orang (+Rp ${biayaTambahan.toLocaleString("id-ID")})`;
+  }
+  infoWisuda.innerText = infoText;
+}
+
+// Event listener
+paketWisuda.onchange = hitungWisuda;
+orangWisuda.oninput = hitungWisuda;
+
+// Inisialisasi saat load
+hitungWisuda();
+  
 <script>
 const waNumber = "6282199327646";
 const diskonPersen = 10;
@@ -209,3 +240,4 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </body>
 </html>
  
+
