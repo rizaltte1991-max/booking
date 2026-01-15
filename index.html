@@ -57,6 +57,32 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <div class="info hidden" id="tambahanInfoWisuda"></div>
 </div>
 
+  <!-- Form Pasfoto -->
+<div id="formPasfoto" style="display:none">
+  <label>Jenis Pasfoto:</label>
+  <select id="jenisPasfoto">
+    <option value="sendiri">Sendiri – Rp 40.000</option>
+    <option value="berdua">Berdua – Rp 50.000</option>
+  </select>
+
+  <label>Layanan Tambahan:</label>
+  <input type="checkbox" id="gantiWarna" value="20000"> Ganti warna/latar (+Rp20.000)<br>
+  <input type="checkbox" id="bersihkanWajah" value="10000"> Bersihkan wajah (+Rp10.000)<br>
+  <input type="checkbox" id="editDasi" value="20000"> Edit dasi/jas (+Rp20.000)<br>
+
+  <label>Cetak:</label>
+  <select id="cetakPasfoto">
+    <option value="2x3">2x3 – Rp3.000/lembar</option>
+    <option value="3x4">3x4 – Rp3.000/lembar</option>
+    <option value="4x6">4x6 – Rp3.000/lembar</option>
+  </select>
+
+  <label>Jumlah Lembar Cetak:</label>
+  <input type="number" id="jumlahCetak" min="1" placeholder="Jumlah lembar">
+  
+  <div class="info" id="infoPasfoto"></div>
+</div>
+
 <button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
 
 <div id="total">Total: -</div>
@@ -154,6 +180,33 @@ function hitungWisuda(){
   tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")}) | Tambahan file: Rp25.000/file (informasi)`;
 }
 
+  function hitungPasfoto(){
+  // Harga dasar pasfoto
+  let hargaDasar = jenisPasfoto.value == "sendiri" ? 40000 : 50000;
+
+  // Layanan tambahan
+  let tambahan = 0;
+  if(gantiWarna.checked) tambahan += 20000;
+  if(bersihkanWajah.checked) tambahan += 10000;
+  if(editDasi.checked) tambahan += 20000;
+
+  // Cetak per lembar
+  let lembar = parseInt(jumlahCetak.value)||0;
+  let hargaCetak = lembar * 3000;
+
+  // Total harga
+  totalHarga = hargaDasar + tambahan + hargaCetak;
+
+  // Update tampilan
+  total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
+
+  // Info layanan
+  let infoText = `Harga dasar: Rp ${hargaDasar.toLocaleString("id-ID")}`;
+  if(tambahan>0) infoText += ` | Tambahan: Rp ${tambahan.toLocaleString("id-ID")}`;
+  if(lembar>0) infoText += ` | Cetak: ${lembar} lembar × Rp3.000`;
+  infoPasfoto.innerText = infoText;
+}
+  
 function updateForm(){
   extraKostum=0;
   formWisuda.style.display = layanan.value=="wisuda"?"block":"none";
@@ -161,6 +214,7 @@ function updateForm(){
   kostumInfo.innerText="";
   tambahKostumBtn.style.display="none";
   tambahanInfoWisuda.classList.add("hidden");
+  formPasfoto.style.display = layanan.value=="pasfoto" ? "block" : "none";
 
   // Hitung harga awal ketika ganti layanan
   if(layanan.value=="wisuda") hitungWisuda();
@@ -211,6 +265,7 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
 
