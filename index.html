@@ -53,6 +53,7 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <label>Jumlah Orang (Wisuda):</label>
   <input type="number" id="orangWisuda" min="1" placeholder="Jumlah orang">
   <div class="info hidden" id="tambahanInfoWisuda"></div>
+  <div class="info hidden" id="tambahanFileWisuda">Tambahan file foto: Rp25.000/file (informasi)</div>
 </div>
 
 <!-- Form Pasfoto -->
@@ -170,6 +171,18 @@ function hitungWisuda(){
   totalHarga = hargaDasar + biayaTambahan;
 
   total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileFoto} File Foto)`;
+  const tambahanFileWisuda = document.getElementById("tambahanFileWisuda");
+
+if(biayaTambahan>0){
+    tambahanInfoWisuda.classList.remove("hidden");
+    tambahanInfoWisuda.innerText = `Jumlah orang melebihi limit (${maxOrang}). Biaya tambahan: Rp ${biayaTambahan.toLocaleString("id-ID")}`;
+    
+    tambahanFileWisuda.classList.remove("hidden");
+    tambahanFileWisuda.innerText = `Tambahan file foto: Rp25.000/file (informasi)`;
+} else {
+    tambahanInfoWisuda.classList.add("hidden");
+    tambahanFileWisuda.classList.add("hidden");
+}
 
   if(biayaTambahan>0){
     tambahanInfoWisuda.classList.remove("hidden");
@@ -272,3 +285,4 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </body>
 </html>
  
+
