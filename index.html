@@ -143,18 +143,15 @@ function hitungWisuda(){
   let tambahanOrang = orang > maxOrang ? orang - maxOrang : 0;
   let biayaTambahanOrang = tambahanOrang * 25000;
 
-  // Total harga hanya dihitung dari harga dasar + tambahan orang
+  // Total harga hanya dari harga dasar + tambahan orang
   totalHarga = hargaDasar + biayaTambahanOrang;
-
-  // Total file untuk info saja
-  let totalFile = fileDasar + tambahanOrang; // tambahan file = tambahan orang (informasi)
 
   // Update total
   total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileDasar} File Foto)`;
 
-  // Update infoWisuda (tambahan file hanya info)
+  // Update infoWisuda (hanya Max orang, File foto, Tambahan orang)
   tambahanInfoWisuda.classList.remove("hidden");
-  tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")}) | Tambahan file (info): ${tambahanOrang} | Total file (info): ${totalFile}`;
+  tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")})`;
 }
 
 function updateForm(){
@@ -214,6 +211,7 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
 
