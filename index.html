@@ -143,18 +143,23 @@ function hitungUmum(){
   const orang = parseInt(orangUmum.value)||0;
   const harga = hargaUmum[orang]||0;
 
+  // Hitung kostum dari klien
   let kostum = 0;
   if(orang>=1 && orang<=3) kostum=1;
   else if(orang>=4 && orang<=15) kostum=2;
   else if(orang>=16 && orang<=30) kostum=3;
 
+  // Total harga termasuk extra kostum dari tombol (+Rp50.000)
   let totalCalc = harga + (extraKostum*hargaKostum);
   totalHarga = applyDiskon(totalCalc);
   tampil();
 
+  // Tampilkan info kostum di bawah input jumlah orang
   if(orang>0){
-    kostumInfo.innerText = "Kostum dari klien: "+kostum+" set | Tambahan: "+extraKostum+" (Rp50.000 / kostum)";
-  }else kostumInfo.innerText="";
+    kostumInfo.innerText = `Kostum dari klien: ${kostum} set | Tambahan: ${extraKostum} set (+Rp50.000/set)`;
+  } else kostumInfo.innerText="";
+
+  // Tampilkan tombol tambah kostum jika diskon aktif
   tambahKostumBtn.style.display = diskonAktif ? "block" : "none";
 }
 
@@ -285,4 +290,5 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </body>
 </html>
  
+
 
