@@ -136,19 +136,28 @@ function hitungWisuda(){
   const orang = parseInt(orangWisuda.value)||0;
 
   let maxOrang = paket=="family"?10:12;
-  let fileFoto = paket=="family"?15:30;
+  let fileDasar = paket=="family"?15:30;
   let hargaDasar = paket=="family"?350000:675000;
 
-  let biayaTambahan = orang>maxOrang ? (orang-maxOrang)*25000 : 0;
-  let totalPaket = hargaDasar + biayaTambahan;
+  // Tambahan per orang
+  let tambahanOrang = orang>maxOrang ? orang - maxOrang : 0;
+  let biayaTambahanOrang = tambahanOrang * 25000;
 
-  totalHarga = totalPaket;
-  total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileFoto} File Foto)`;
+  // Tambahan file foto (sama seperti tambahan orang)
+  let fileTambahan = tambahanOrang; // 1 file tambahan per orang tambahan
+  let biayaTambahanFile = fileTambahan * 25000;
 
-  if(biayaTambahan>0){
-    tambahanInfoWisuda.classList.remove("hidden");
-    tambahanInfoWisuda.innerText = `Jumlah orang melebihi limit (${maxOrang}). Biaya tambahan: Rp ${biayaTambahan.toLocaleString("id-ID")}, File tetap: ${fileFoto}`;
-  } else tambahanInfoWisuda.classList.add("hidden");
+  // Total harga
+  totalHarga = hargaDasar + biayaTambahanOrang + biayaTambahanFile;
+
+  // Total file
+  let totalFile = fileDasar + fileTambahan;
+
+  total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${totalFile} File Foto)`;
+
+  // Update infoWisuda
+  tambahanInfoWisuda.classList.remove("hidden");
+  tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")}) | Tambahan file: ${fileTambahan} (+Rp ${biayaTambahanFile.toLocaleString("id-ID")}) | Total file: ${totalFile}`;
 }
 
 function updateForm(){
@@ -208,3 +217,4 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
