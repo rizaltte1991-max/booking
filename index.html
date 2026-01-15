@@ -149,9 +149,9 @@ function hitungWisuda(){
   // Update total
   total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileDasar} File Foto)`;
 
-  // Update infoWisuda (hanya Max orang, File foto, Tambahan orang)
+  // Update infoWisuda (Max orang, File foto, Tambahan orang, Tambahan file info)
   tambahanInfoWisuda.classList.remove("hidden");
-  tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")})`;
+  tambahanInfoWisuda.innerText = `Max orang: ${maxOrang} | File foto: ${fileDasar} | Tambahan orang: ${tambahanOrang} (+Rp ${biayaTambahanOrang.toLocaleString("id-ID")}) | Tambahan file: Rp25.000/file (informasi)`;
 }
 
 function updateForm(){
@@ -211,6 +211,7 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
 
