@@ -31,6 +31,9 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
 <label>No WA:</label>
 <input type="text" id="hp" placeholder="08xxxx">
 
+<label>Jam Booking:</label>
+<input type="time" id="jamBooking" min="08:00" max="22:00">
+
 <label>Layanan:</label>
 <select id="layanan">
   <option value="umum">Umum</option>
@@ -123,6 +126,7 @@ const formWisuda = document.getElementById("formWisuda");
 const formPasfoto = document.getElementById("formPasfoto");
 const nama = document.getElementById("nama");
 const hp = document.getElementById("hp");
+const jamBooking = document.getElementById("jamBooking");
 const tambahanInfoWisuda = document.getElementById("tambahanInfoWisuda");
 const jenisPasfoto = document.getElementById("jenisPasfoto");
 const gantiWarna = document.getElementById("gantiWarna");
@@ -145,23 +149,19 @@ function hitungUmum(){
   const orang = parseInt(orangUmum.value)||0;
   const harga = hargaUmum[orang]||0;
 
-  // Hitung kostum dari klien
   let kostum = 0;
   if(orang>=1 && orang<=3) kostum=1;
   else if(orang>=4 && orang<=15) kostum=2;
   else if(orang>=16 && orang<=30) kostum=3;
 
-  // Total harga termasuk extra kostum dari tombol (+Rp50.000)
   let totalCalc = harga + (extraKostum*hargaKostum);
   totalHarga = applyDiskon(totalCalc);
   tampil();
 
-  // Tampilkan info kostum di bawah input jumlah orang
   if(orang>0){
     kostumInfo.innerText = `Kostum dari klien: ${kostum} set | Tambahan: ${extraKostum} set (+Rp50.000/set)`;
   } else kostumInfo.innerText="";
 
-  // Tampilkan tombol tambah kostum jika diskon aktif
   tambahKostumBtn.style.display = diskonAktif ? "block" : "none";
 }
 
@@ -181,21 +181,16 @@ function hitungWisuda(){
   total.innerText = `Total: Rp ${totalHarga.toLocaleString("id-ID")} (${fileFoto} File Foto)`;
   const tambahanFileWisuda = document.getElementById("tambahanFileWisuda");
 
-if(biayaTambahan>0){
+  if(biayaTambahan>0){
     tambahanInfoWisuda.classList.remove("hidden");
     tambahanInfoWisuda.innerText = `Jumlah orang melebihi limit (${maxOrang}). Biaya tambahan: Rp ${biayaTambahan.toLocaleString("id-ID")}`;
     
     tambahanFileWisuda.classList.remove("hidden");
     tambahanFileWisuda.innerText = `Tambahan file foto: Rp25.000/file (informasi)`;
-} else {
+  } else {
     tambahanInfoWisuda.classList.add("hidden");
     tambahanFileWisuda.classList.add("hidden");
-}
-
-  if(biayaTambahan>0){
-    tambahanInfoWisuda.classList.remove("hidden");
-    tambahanInfoWisuda.innerText = `Jumlah orang melebihi limit (${maxOrang}). Biaya tambahan: Rp ${biayaTambahan.toLocaleString("id-ID")}`;
-  } else tambahanInfoWisuda.classList.add("hidden");
+  }
 }
 
 // --- Hitung Pasfoto ---
@@ -271,7 +266,6 @@ paketWisuda.onchange = hitungWisuda;
 orangWisuda.oninput = hitungWisuda;
 orangUmum.oninput = hitungUmum;
 
-// Pasfoto
 jenisPasfoto.onchange = hitungPasfoto;
 gantiWarna.onchange = hitungPasfoto;
 bersihkanWajah.onchange = hitungPasfoto;
@@ -282,19 +276,15 @@ jumlahCetak.oninput = hitungPasfoto;
 // ======= Kirim WA =======
 function kirimWA(){
   if(!nama.value||!hp.value) return alert("Isi nama & WA");
+  const jam = jamBooking.value || "-";
   const pesan=`Halo Logaloga Studio
 Nama: ${nama.value}
 WA: ${hp.value}
 Layanan: ${layanan.value}
+Jam Booking: ${jam}
 Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
   window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(pesan));
 }
 </script>
 </body>
 </html>
- 
-
-
-
-
-
