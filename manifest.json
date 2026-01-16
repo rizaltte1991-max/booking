@@ -1,0 +1,11 @@
+{
+  "background_color": "#8fb5a9",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "rizaltte1991-max.github",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "logaloga",
+  "start_url": "/",
+  "theme_color": "#c9c1ac"
+}
