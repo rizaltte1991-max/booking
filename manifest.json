@@ -4,7 +4,14 @@
   "start_url": "/booking/",
   "scope": "/booking/",
   "display": "standalone",
-  "background_color": "#8fb5a9",
-  "theme_color": "#c9c1ac",
-  "orientation": "any"
+  "background_color": "#0b1e2d",
+  "theme_color": "#1c2b3a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
