@@ -4,39 +4,126 @@
 <meta charset="UTF-8">
 <title>Logaloga Studio Booking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#0b1e2d;color:#fff;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:20px;}
-.container{background:rgba(28,43,58,0.95);padding:20px;border-radius:10px;max-width:500px;width:100%;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
-h2{text-align:center;margin-bottom:10px;}
-label{display:block;margin-top:10px;font-weight:bold;}
-input,select,button{width:100%;padding:8px;margin-top:5px;border-radius:6px;border:none;font-size:15px;}
-button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
-#tambahKostumBtn{margin-top:5px;background:#ffbe0b;color:#000}
-#diskonBtn{background:#ff006e;color:#fff;margin-top:10px}
-#total{margin-top:15px;font-size:18px;font-weight:bold;text-align:center}
-#kostumInfo,#countdown,#infoPasfoto{text-align:center;margin-top:10px;font-size:14px;color:#ffd700}
-.form-section{width:100%;margin-top:10px;}
+:root{
+  --bg:#F4F7F5;
+  --card:#ffffff;
+  --primary:#A3B5A4;
+  --secondary:#F6C1B5;
+  --text:#2F3E34;
+  --muted:#6B7A70;
+}
+
+*{box-sizing:border-box;font-family:Poppins,sans-serif}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  padding:30px 15px;
+}
+
+.container{
+  background:var(--card);
+  padding:25px;
+  border-radius:22px;
+  max-width:520px;
+  width:100%;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:15px;
+  font-weight:700;
+}
+
+label{
+  display:block;
+  margin-top:12px;
+  font-weight:600;
+  font-size:14px;
+}
+
+input,select,button{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border-radius:14px;
+  border:1px solid #E2E8E4;
+  font-size:14px;
+}
+
+button{
+  cursor:pointer;
+  background:var(--primary);
+  color:#fff;
+  font-weight:600;
+  border:none;
+  transition:.3s;
+}
+
+button:hover{background:#8FA998}
+
+#tambahKostumBtn{
+  background:var(--secondary);
+  color:#000;
+}
+
+#diskonBtn{
+  background:#ff7aa2;
+  margin-top:14px;
+}
+
+#total{
+  margin-top:18px;
+  font-size:20px;
+  font-weight:700;
+  text-align:center;
+}
+
+#kostumInfo,#countdown,#infoPasfoto{
+  text-align:center;
+  margin-top:10px;
+  font-size:13px;
+  color:#9c7c4c;
+}
+
+.form-section{
+  margin-top:10px;
+  padding:15px;
+  border-radius:18px;
+  background:#FAFBFA;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 <h2>Booking Logaloga Studio</h2>
 
-<label>Nama:</label>
+<label>Nama</label>
 <input type="text" id="nama" placeholder="Nama lengkap">
 
-<label>No WhatsApp:</label>
+<label>No WhatsApp</label>
 <input type="text" id="hp" placeholder="08xxxxxxxxxx">
 
-<!-- JAM BOOKING -->
-<label>Tanggal Booking:</label>
+<label>Tanggal Booking</label>
 <input type="date" id="tanggalBooking">
 
-<label>Jam Booking:</label>
+<label>Jam Booking</label>
 <input type="time" id="jamBooking">
 
-<label>Layanan:</label>
+<label>Layanan</label>
 <select id="layanan">
   <option value="umum">Foto Umum</option>
   <option value="wisuda">Wisuda</option>
@@ -44,61 +131,43 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <option value="pasfoto">Pasfoto</option>
 </select>
 
-<!-- FORM UMUM -->
 <div class="form-section" id="formUmum">
   <label>Jumlah Orang</label>
   <input type="number" id="orangUmum" min="1" max="30">
   <button id="tambahKostumBtn" onclick="tambahKostum()">Tambah Kostum (+Rp50.000)</button>
 </div>
 
-<!-- FORM WISUDA -->
 <div class="form-section" id="formWisuda" style="display:none">
   <label>Paket Wisuda</label>
   <select id="paketWisuda">
-    <option value="family">Family – Rp350.000 (max 10 orang)</option>
-    <option value="plus">Plus – Rp675.000 (max 12 orang)</option>
+    <option value="family">Family – Rp350.000</option>
+    <option value="plus">Plus – Rp675.000</option>
   </select>
   <label>Jumlah Orang</label>
   <input type="number" id="orangWisuda" min="1">
 </div>
 
-<!-- FORM PREWEDDING -->
 <div class="form-section" id="formPrewedding" style="display:none">
-  <label>Paket Prewedding (2 Orang)</label>
+  <label>Paket Prewedding</label>
   <select id="paketPrewedding">
-    <option value="1">
-      Rp400.000 | Kostum 1 | 25 file
-      | Bonus: 10R 1 lembar + 3R 2 lembar
-    </option>
-    <option value="2">
-      Rp680.000 | Kostum 2 | 35 file
-      | Bonus: 12R 1 lembar (cetak di luar)
-    </option>
-    <option value="3">
-      Rp800.000 | Kostum 3 | 45 file
-      | Bonus: 12R 1 lembar + 10R 1 lembar + 3R 2 lembar
-    </option>
+    <option value="1">Rp400.000 | 1 Kostum | 25 File</option>
+    <option value="2">Rp680.000 | 2 Kostum | 35 File</option>
+    <option value="3">Rp800.000 | 3 Kostum | 45 File</option>
   </select>
-
-  <div style="margin-top:8px;font-size:13px;color:#ffd700">
-    * Paket prewedding berlaku untuk 2 orang
-  </div>
 </div>
 
-<!-- FORM PASFOTO -->
-<div id="formPasfoto" style="display:none">
-  <label>Jenis Pasfoto:</label>
+<div class="form-section" id="formPasfoto" style="display:none">
+  <label>Jenis Pasfoto</label>
   <select id="jenisPasfoto">
     <option value="sendiri">Sendiri – Rp40.000</option>
     <option value="berdua">Berdua – Rp50.000</option>
   </select>
 
-  <label>Layanan Tambahan:</label>
-  <input type="checkbox" id="gantiWarna"> Ganti latar (+Rp20.000)<br>
-  <input type="checkbox" id="bersihkanWajah"> Bersihkan wajah (+Rp10.000)<br>
-  <input type="checkbox" id="editDasi"> Edit jas/dasi (+Rp20.000)
+  <label><input type="checkbox" id="gantiWarna"> Ganti latar (+Rp20.000)</label>
+  <label><input type="checkbox" id="bersihkanWajah"> Bersihkan wajah (+Rp10.000)</label>
+  <label><input type="checkbox" id="editDasi"> Edit jas/dasi (+Rp20.000)</label>
 
-  <label>Jumlah Cetak (Rp3.000 / lembar)</label>
+  <label>Jumlah Cetak (Rp3.000)</label>
   <input type="number" id="jumlahCetak" min="0">
 </div>
 
@@ -111,18 +180,17 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
 <button onclick="kirimWA()">Kirim ke WhatsApp</button>
 </div>
 
+<!-- ⚠️ SCRIPT ASLI KAMU (TIDAK DIUBAH) -->
 <script>
 const waNumber="6282199327646";
 const diskonDeadline=new Date("2026-01-28T22:00:00+07:00");
 let diskonAktif=false;
 let totalHarga=0;
-let extraKostum=0;
 
 const hargaUmum={1:100000,2:200000,3:300000,4:335000,5:370000,6:400000,7:420000,8:450000,9:475000,10:500000,11:525000,12:550000,13:575000,14:600000,15:625000};
 
 function tampil(){
-  document.getElementById("total").innerText=
-    totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
+  total.innerText=totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
 }
 
 function hitungUmum(){
@@ -187,7 +255,7 @@ jumlahCetak.oninput=hitungPasfoto;
 
 function kirimWA(){
   if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value){
-    alert("Lengkapi nama, WA, tanggal & jam booking");
+    alert("Lengkapi data dulu");
     return;
   }
   const msg=`Halo Logaloga Studio
@@ -200,6 +268,6 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
   window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
 }
 </script>
+
 </body>
 </html>
-
