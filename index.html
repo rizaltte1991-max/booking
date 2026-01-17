@@ -56,14 +56,16 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
 
 <!-- FORM PREWEDDING -->
 <div class="form-section" id="formPrewedding" style="display:none">
-  <label>Paket Prewedding</label>
+  <label>Paket Prewedding (2 Orang)</label>
   <select id="paketPrewedding">
     <option value="1">Rp400.000 | Kostum 1 | 25 file | 10R 1 lembar + 3R 2 lembar</option>
     <option value="2">Rp680.000 | Kostum 2 | 35 file | 12R 1 lembar (dicetak di luar)</option>
     <option value="3">Rp800.000 | Kostum 3 | 45 file | 12R 1 lembar + 10R 1 lembar + 3R 2 lembar</option>
   </select>
-  <label>Jumlah Orang</label>
-  <input type="number" id="orangPrewedding" min="1" placeholder="Masukkan jumlah orang">
+
+  <div style="margin-top:8px;font-size:13px;color:#ffd700">
+    * Paket prewedding berlaku untuk 2 orang
+  </div>
 </div>
 
 <!-- FORM PASFOTO (pakai HTML asli yang kamu kirim) -->
@@ -236,5 +238,6 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
