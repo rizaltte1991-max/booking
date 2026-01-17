@@ -19,10 +19,11 @@ body{
   background:rgba(28,43,58,0.95);
   padding:20px;
   border-radius:10px;
-  max-width:480px;
+  max-width:500px;
   width:100%;
   box-shadow:0 4px 10px rgba(0,0,0,0.3);
 }
+h2{text-align:center}
 label{display:block;margin-top:10px;font-weight:bold;}
 input,select,button{
   width:100%;
@@ -38,11 +39,16 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
 #total{margin-top:15px;font-size:18px;font-weight:bold;text-align:center}
 #kostumInfo,#countdown{text-align:center;margin-top:10px;font-size:14px;color:#ffd700}
 
-/* Prewedding & Wisuda fix */
-.form-wisuda, .form-prewedding, .form-umum { width:100%; margin-top:10px; }
-.form-wisuda select, .form-prewedding select, .form-umum select,
-.form-wisuda option, .form-prewedding option, .form-umum option {
-  white-space: normal; line-height:1.4; overflow:visible;
+/* Form rapi */
+.form-umum,.form-wisuda,.form-prewedding,.form-pasfoto {
+  width:100%;
+  margin-top:10px;
+}
+.form-umum select,.form-wisuda select,.form-prewedding select,.form-pasfoto select,
+.form-umum option,.form-wisuda option,.form-prewedding option,.form-pasfoto option {
+  white-space: normal;
+  line-height:1.4;
+  overflow:visible;
 }
 </style>
 </head>
@@ -61,16 +67,17 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <option value="umum">Umum</option>
   <option value="wisuda">Wisuda</option>
   <option value="prewedding">Prewedding</option>
+  <option value="pasfoto">Pasfoto</option>
 </select>
 
-<!-- Form Umum -->
+<!-- FORM UMUM -->
 <div class="form-umum" id="formUmum">
-  <label>Jumlah Orang (Umum):</label>
+  <label>Jumlah Orang (Umum)</label>
   <input type="number" id="orangUmum" min="1" max="30" placeholder="1-30 orang">
   <button id="tambahKostumBtn" onclick="tambahKostum()">Tambah Kostum (+Rp50.000)</button>
 </div>
 
-<!-- Form Wisuda -->
+<!-- FORM WISUDA -->
 <div class="form-wisuda" id="formWisuda" style="display:none">
   <label>Paket Wisuda</label>
   <select id="paketWisuda">
@@ -81,7 +88,7 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   <input type="number" id="orangWisuda" min="1" placeholder="Masukkan jumlah orang">
 </div>
 
-<!-- Form Prewedding -->
+<!-- FORM PREWEDDING -->
 <div class="form-prewedding" id="formPrewedding" style="display:none">
   <label>Paket Prewedding</label>
   <select id="paketPrewedding">
@@ -91,6 +98,12 @@ button{cursor:pointer;background:#3a86ff;color:#fff;font-weight:bold}
   </select>
   <label>Jumlah Orang</label>
   <input type="number" id="orangPrewedding" min="1" placeholder="Masukkan jumlah orang">
+</div>
+
+<!-- FORM PASFOTO -->
+<div class="form-pasfoto" id="formPasfoto" style="display:none">
+  <label>Jumlah Orang (Pasfoto)</label>
+  <input type="number" id="orangPasfoto" min="1" placeholder="Masukkan jumlah orang">
 </div>
 
 <button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
@@ -116,9 +129,7 @@ const hargaUmum = {1:100000,2:200000,3:300000,4:335000,5:370000,
 // Prewedding
 const hargaPrewedding = {1:400000,2:680000,3:800000};
 
-// Wisuda
-// (paket Family dan Plus sudah ada di select, diskon tidak berlaku)
-
+// Wisuda = dihitung dari select
 const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
 
 let totalHarga = 0;
@@ -132,6 +143,7 @@ const paketPrewedding = document.getElementById("paketPrewedding");
 const orangUmum = document.getElementById("orangUmum");
 const orangWisuda = document.getElementById("orangWisuda");
 const orangPrewedding = document.getElementById("orangPrewedding");
+const orangPasfoto = document.getElementById("orangPasfoto");
 const total = document.getElementById("total");
 const diskonBtn = document.getElementById("diskonBtn");
 const tambahKostumBtn = document.getElementById("tambahKostumBtn");
@@ -140,6 +152,7 @@ const countdown = document.getElementById("countdown");
 const formUmum = document.getElementById("formUmum");
 const formWisuda = document.getElementById("formWisuda");
 const formPrewedding = document.getElementById("formPrewedding");
+const formPasfoto = document.getElementById("formPasfoto");
 const nama = document.getElementById("nama");
 const hp = document.getElementById("hp");
 
@@ -181,7 +194,6 @@ function hitungWisuda(){
   let harga = 0;
   if(paket=="family") harga = 350000 + (orang>10?(orang-10)*25000:0);
   if(paket=="plus") harga = 675000 + (orang>12?(orang-12)*25000:0);
-
   totalHarga = harga;
   tampil();
   kostumInfo.innerText="";
@@ -196,11 +208,20 @@ function hitungPrewedding(){
   tambahKostumBtn.style.display="none";
 }
 
+function hitungPasfoto(){
+  const orang = parseInt(orangPasfoto.value)||0;
+  totalHarga = orang * 50000; // contoh 50rb per orang
+  tampil();
+  kostumInfo.innerText="";
+  tambahKostumBtn.style.display="none";
+}
+
 function updateForm(){
   extraKostum=0;
   formWisuda.style.display = layanan.value=="wisuda"?"block":"none";
   formUmum.style.display = layanan.value=="umum"?"block":"none";
   formPrewedding.style.display = layanan.value=="prewedding"?"block":"none";
+  formPasfoto.style.display = layanan.value=="pasfoto"?"block":"none";
   kostumInfo.innerText="";
   tambahKostumBtn.style.display="none";
 }
@@ -212,6 +233,7 @@ function toggleDiskon(){
 
   if(layanan.value=="wisuda") hitungWisuda();
   else if(layanan.value=="prewedding") hitungPrewedding();
+  else if(layanan.value=="pasfoto") hitungPasfoto();
   else hitungUmum();
 }
 
@@ -240,6 +262,7 @@ orangWisuda.oninput = hitungWisuda;
 orangUmum.oninput = hitungUmum;
 paketPrewedding.onchange = hitungPrewedding;
 orangPrewedding.oninput = hitungPrewedding;
+orangPasfoto.oninput = hitungPasfoto;
 
 // ===== KIRIM WA =====
 function kirimWA(){
@@ -254,4 +277,3 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
- 
