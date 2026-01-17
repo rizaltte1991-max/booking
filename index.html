@@ -196,6 +196,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 </div>
 
 <div id="total">Total: -</div>
+<div id="countdown" class="info"></div>
 <button onclick="kirimWA()">Kirim ke WhatsApp</button>
 </div>
 </section>
@@ -282,7 +283,28 @@ Layanan: ${layanan.value}
 ${total.innerText}`;
   window.open("https://wa.me/6282199327646?text="+encodeURIComponent(msg));
 }
-</script>
 
+// DISKON COUNTDOWN
+const diskonDeadline = new Date("2026-01-28T22:00:00+07:00");
+function updateCountdown() {
+  const now = new Date();
+  let diff = diskonDeadline - now;
+  if(diff <= 0){
+    countdown.innerText = "Diskon sudah berakhir";
+    diskonBtn.disabled = true;
+    kostumBtn.disabled = true;
+    clearInterval(countdownInterval);
+    return;
+  }
+  let days = Math.floor(diff / (1000*60*60*24));
+  let hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  let minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+  let seconds = Math.floor((diff % (1000*60)) / 1000);
+  countdown.innerText = `Diskon aktif, sisa ${days} hari ${hours} jam ${minutes} menit ${seconds} detik`;
+}
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown();
+
+</script>
 </body>
 </html>
