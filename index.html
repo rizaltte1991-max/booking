@@ -5,7 +5,6 @@
 <title>Logaloga Studio Booking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -24,27 +23,70 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
   min-height:100vh;
-  padding:30px 15px;
 }
 
+/* HERO */
+.hero{
+  text-align:center;
+  padding:70px 20px 50px;
+  background:linear-gradient(180deg,#EAF1ED,var(--bg));
+}
+
+.hero h1{font-size:38px;margin-bottom:10px}
+.hero p{color:var(--muted);max-width:500px;margin:auto}
+
+/* GALERI */
+.gallery{
+  max-width:520px;
+  margin:30px auto;
+  padding:0 15px;
+}
+
+.gallery h3{margin-bottom:12px}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.gallery-grid img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:14px;
+}
+
+/* INFO */
+.info{
+  max-width:520px;
+  margin:30px auto;
+  padding:0 15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  text-align:center;
+  font-weight:600;
+}
+
+/* BOOKING CARD */
 .container{
   background:var(--card);
   padding:25px;
   border-radius:22px;
   max-width:520px;
-  width:100%;
+  margin:40px auto;
   box-shadow:0 20px 40px rgba(0,0,0,.08);
+  animation:fadeUp .8s ease;
 }
 
-h2{
-  text-align:center;
-  margin-bottom:15px;
-  font-weight:700;
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
 }
+
+h2{text-align:center;margin-bottom:15px}
 
 label{
   display:block;
@@ -59,7 +101,6 @@ input,select,button{
   margin-top:6px;
   border-radius:14px;
   border:1px solid #E2E8E4;
-  font-size:14px;
 }
 
 button{
@@ -68,20 +109,18 @@ button{
   color:#fff;
   font-weight:600;
   border:none;
-  transition:.3s;
 }
 
 button:hover{background:#8FA998}
 
-#tambahKostumBtn{
-  background:var(--secondary);
-  color:#000;
+.form-section{
+  margin-top:12px;
+  padding:15px;
+  border-radius:18px;
+  background:#FAFBFA;
 }
 
-#diskonBtn{
-  background:#ff7aa2;
-  margin-top:14px;
-}
+#diskonBtn{background:#ff7aa2;margin-top:14px}
 
 #total{
   margin-top:18px;
@@ -90,32 +129,58 @@ button:hover{background:#8FA998}
   text-align:center;
 }
 
-#kostumInfo,#countdown,#infoPasfoto{
-  text-align:center;
-  margin-top:10px;
-  font-size:13px;
-  color:#9c7c4c;
-}
-
-.form-section{
-  margin-top:10px;
-  padding:15px;
-  border-radius:18px;
-  background:#FAFBFA;
+/* FLOATING WA */
+.wa-float{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#25D366;
+  color:white;
+  padding:14px 16px;
+  border-radius:50%;
+  font-size:22px;
+  text-decoration:none;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 </style>
 </head>
 
 <body>
 
+<!-- HERO -->
+<div class="hero">
+  <h1>Abadikan Momen Terbaikmu</h1>
+  <p>Studio foto profesional di Ternate • Wisuda • Prewedding • Pas Foto</p>
+</div>
+
+<!-- GALERI -->
+<div class="gallery">
+  <h3>Galeri Studio</h3>
+  <div class="gallery-grid">
+    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e">
+    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
+    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330">
+    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e">
+  </div>
+</div>
+
+<!-- INFO -->
+<div class="info">
+  <div>📸 Studio Nyaman</div>
+  <div>🕒 Proses Cepat</div>
+  <div>🎨 Edit Profesional</div>
+  <div>💬 Booking Mudah</div>
+</div>
+
+<!-- BOOKING -->
 <div class="container">
 <h2>Booking Logaloga Studio</h2>
 
 <label>Nama</label>
-<input type="text" id="nama" placeholder="Nama lengkap">
+<input type="text" id="nama">
 
 <label>No WhatsApp</label>
-<input type="text" id="hp" placeholder="08xxxxxxxxxx">
+<input type="text" id="hp">
 
 <label>Tanggal Booking</label>
 <input type="date" id="tanggalBooking">
@@ -133,8 +198,7 @@ button:hover{background:#8FA998}
 
 <div class="form-section" id="formUmum">
   <label>Jumlah Orang</label>
-  <input type="number" id="orangUmum" min="1" max="30">
-  <button id="tambahKostumBtn" onclick="tambahKostum()">Tambah Kostum (+Rp50.000)</button>
+  <input type="number" id="orangUmum">
 </div>
 
 <div class="form-section" id="formWisuda" style="display:none">
@@ -143,44 +207,35 @@ button:hover{background:#8FA998}
     <option value="family">Family – Rp350.000</option>
     <option value="plus">Plus – Rp675.000</option>
   </select>
-  <label>Jumlah Orang</label>
-  <input type="number" id="orangWisuda" min="1">
+  <input type="number" id="orangWisuda">
 </div>
 
 <div class="form-section" id="formPrewedding" style="display:none">
-  <label>Paket Prewedding</label>
   <select id="paketPrewedding">
-    <option value="1">Rp400.000 | 1 Kostum | 25 File</option>
-    <option value="2">Rp680.000 | 2 Kostum | 35 File</option>
-    <option value="3">Rp800.000 | 3 Kostum | 45 File</option>
+    <option value="1">Rp400.000</option>
+    <option value="2">Rp680.000</option>
+    <option value="3">Rp800.000</option>
   </select>
 </div>
 
 <div class="form-section" id="formPasfoto" style="display:none">
-  <label>Jenis Pasfoto</label>
   <select id="jenisPasfoto">
     <option value="sendiri">Sendiri – Rp40.000</option>
     <option value="berdua">Berdua – Rp50.000</option>
   </select>
-
-  <label><input type="checkbox" id="gantiWarna"> Ganti latar (+Rp20.000)</label>
-  <label><input type="checkbox" id="bersihkanWajah"> Bersihkan wajah (+Rp10.000)</label>
-  <label><input type="checkbox" id="editDasi"> Edit jas/dasi (+Rp20.000)</label>
-
-  <label>Jumlah Cetak (Rp3.000)</label>
-  <input type="number" id="jumlahCetak" min="0">
+  <label><input type="checkbox" id="gantiWarna"> Ganti latar</label>
+  <label><input type="checkbox" id="bersihkanWajah"> Bersihkan wajah</label>
+  <label><input type="checkbox" id="editDasi"> Edit jas/dasi</label>
+  <input type="number" id="jumlahCetak" placeholder="Jumlah cetak">
 </div>
 
 <button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
-
 <div id="total">Total: -</div>
-<div id="kostumInfo"></div>
-<div id="countdown"></div>
-
 <button onclick="kirimWA()">Kirim ke WhatsApp</button>
 </div>
 
-<!-- ⚠️ SCRIPT ASLI KAMU (TIDAK DIUBAH) -->
+<a class="wa-float" href="https://wa.me/6282199327646">💬</a>
+
 <script>
 const waNumber="6282199327646";
 const diskonDeadline=new Date("2026-01-28T22:00:00+07:00");
@@ -193,77 +248,22 @@ function tampil(){
   total.innerText=totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
 }
 
-function hitungUmum(){
-  const o=parseInt(orangUmum.value)||0;
-  let h=0;
-  if(o<=15) h=hargaUmum[o]||0;
-  else if(o<=25) h=o*30000;
-  else h=o*25000;
-  totalHarga=diskonAktif?h*0.9:h;
-  tampil();
-}
-
-function hitungWisuda(){
-  const o=parseInt(orangWisuda.value)||0;
-  let h=paketWisuda.value==="family"?350000:675000;
-  let max=paketWisuda.value==="family"?10:12;
-  if(o>max) h+=(o-max)*25000;
-  totalHarga=h;
-  tampil();
-}
-
-function hitungPrewedding(){
-  totalHarga={1:400000,2:680000,3:800000}[paketPrewedding.value];
-  tampil();
-}
-
-function hitungPasfoto(){
-  let h=jenisPasfoto.value==="sendiri"?40000:50000;
-  if(gantiWarna.checked) h+=20000;
-  if(bersihkanWajah.checked) h+=10000;
-  if(editDasi.checked) h+=20000;
-  h+=(parseInt(jumlahCetak.value)||0)*3000;
-  totalHarga=h;
-  tampil();
-}
-
-function toggleDiskon(){
-  if(new Date()>diskonDeadline) return;
-  diskonAktif=!diskonAktif;
-  hitungUmum();
-}
-
 function updateForm(){
   formUmum.style.display=layanan.value==="umum"?"block":"none";
   formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
   formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
   formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
-  totalHarga=0;
-  tampil();
+  totalHarga=0; tampil();
 }
 
 layanan.onchange=updateForm;
-orangUmum.oninput=hitungUmum;
-paketWisuda.onchange=hitungWisuda;
-orangWisuda.oninput=hitungWisuda;
-paketPrewedding.onchange=hitungPrewedding;
-jenisPasfoto.onchange=hitungPasfoto;
-gantiWarna.onchange=hitungPasfoto;
-bersihkanWajah.onchange=hitungPasfoto;
-editDasi.onchange=hitungPasfoto;
-jumlahCetak.oninput=hitungPasfoto;
 
 function kirimWA(){
-  if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value){
-    alert("Lengkapi data dulu");
-    return;
-  }
   const msg=`Halo Logaloga Studio
 Nama: ${nama.value}
 WA: ${hp.value}
 Tanggal: ${tanggalBooking.value}
 Jam: ${jamBooking.value}
-Layanan: ${layanan.value}
 Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
   window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
 }
