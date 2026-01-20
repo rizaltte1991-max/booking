@@ -5,327 +5,161 @@
 <title>Logaloga Studio Booking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-/* --- Warna pastel & layout --- */
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#fef9f7;
-  color:#333;
-}
-header{
-  background:linear-gradient(135deg,#ffd6d6,#fef9f7);
-  text-align:center;
-  padding:50px 20px;
-  font-size:28px;
-  font-weight:bold;
-  color:#333;
-  animation:fadeIn 1s ease-in-out;
-}
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-.container{
-  max-width:500px;
-  margin:20px auto;
-  background:#fff;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-label{display:block;margin-top:10px;font-weight:bold;}
-input,select,button{width:100%;padding:8px;margin-top:5px;border-radius:6px;border:1px solid #ccc;font-size:15px;}
-button{cursor:pointer;font-weight:bold}
-#tambahKostumBtn{background:#ffbe0b;color:#000;margin-top:5px}
+body{margin:0;font-family:Arial,sans-serif;background:#fef9f7;color:#333}
+header{background:linear-gradient(135deg,#ffd6d6,#fef9f7);text-align:center;padding:50px 20px;font-size:28px;font-weight:bold}
+.container{max-width:500px;margin:20px auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+label{display:block;margin-top:10px;font-weight:bold}
+input,select,button{width:100%;padding:8px;margin-top:5px;border-radius:6px;border:1px solid #ccc}
+button{font-weight:bold;cursor:pointer}
+#tambahKostumBtn{background:#ffbe0b}
 #diskonBtn{background:#ff006e;color:#fff;margin-top:10px}
 #total{margin-top:15px;font-size:18px;font-weight:bold;text-align:center}
-#kostumInfo,#countdown,#infoPasfoto{text-align:center;margin-top:10px;font-size:14px;color:#ff8c00}
-.form-section{width:100%;margin-top:10px;}
-/* --- Galeri --- */
-#gallery{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:20px;
-}
-#gallery img{
-  width:100px;
-  height:100px;
-  object-fit:cover;
-  margin:5px;
-  border-radius:6px;
-  transition:transform 0.3s;
-}
-#gallery img:hover{
-  transform:scale(1.1);
-}
-/* --- Tombol WA floating --- */
-#waFloating{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25d366;
-  color:#fff;
-  border-radius:50%;
-  width:60px;
-  height:60px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:30px;
-  cursor:pointer;
-  box-shadow:0 4px 8px rgba(0,0,0,0.2);
-  text-decoration:none;
-}
+#gallery{display:flex;flex-wrap:wrap;justify-content:center;margin-top:20px}
+#gallery img{width:100px;height:100px;object-fit:cover;margin:5px;border-radius:6px}
+#waFloating{position:fixed;bottom:20px;right:20px;background:#25d366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;justify-content:center;align-items:center;font-size:30px;text-decoration:none}
 </style>
 </head>
-<body>
 
+<body>
 <header>✨ Logaloga Studio Booking ✨</header>
 
 <div class="container">
-<h2>Booking Studio</h2>
+<label>Nama</label><input id="nama">
+<label>WhatsApp</label><input id="hp">
+<label>Tanggal</label><input type="date" id="tanggalBooking">
+<label>Jam</label><input type="time" id="jamBooking">
 
-<label>Nama:</label>
-<input type="text" id="nama" placeholder="Nama lengkap">
-
-<label>No WhatsApp:</label>
-<input type="text" id="hp" placeholder="08xxxxxxxxxx">
-
-<label>Tanggal Booking:</label>
-<input type="date" id="tanggalBooking">
-
-<label>Jam Booking:</label>
-<input type="time" id="jamBooking">
-
-<label>Layanan:</label>
+<label>Layanan</label>
 <select id="layanan">
-  <option value="umum">Foto Umum</option>
-  <option value="wisuda">Wisuda</option>
-  <option value="prewedding">Prewedding</option>
-  <option value="pasfoto">Pasfoto</option>
+<option value="umum">Foto Umum</option>
+<option value="wisuda">Wisuda</option>
+<option value="prewedding">Prewedding</option>
+<option value="pasfoto">Pasfoto</option>
 </select>
 
-<!-- FORM UMUM -->
-<div class="form-section" id="formUmum">
-  <label>Jumlah Orang</label>
-  <input type="number" id="orangUmum" min="1" max="30">
-  <button id="tambahKostumBtn" onclick="tambahKostum()" disabled>Tambah Kostum (+Rp50.000)</button>
-  <div id="infoUmum">Informasi tambah file: Rp25.000/file</div>
+<div id="formUmum">
+<label>Jumlah Orang</label>
+<input type="number" id="orangUmum" min="1" max="30">
+<button id="tambahKostumBtn" onclick="tambahKostum()" disabled>Tambah Kostum +50.000</button>
+<div>Tambahan file: Rp25.000/file</div>
 </div>
 
-<!-- FORM WISUDA -->
-<div class="form-section" id="formWisuda" style="display:none">
-  <label>Paket Wisuda</label>
-  <select id="paketWisuda">
-    <option value="350">Rp350.000 | 15 file | Bonus cetak 10R 1 Lembar</option>
-    <option value="675">Rp675.000 | 30 file | Bonus cetak 10R 2 Lembar</option>
-  </select>
-  <label>Jumlah Orang</label>
-  <input type="number" id="orangWisuda" min="1" max="12">
-  <div id="infoWisuda">Tambahan orang: Rp25.000/orang | Tambahan file: Rp25.000/file</div>
+<div id="formWisuda" style="display:none">
+<select id="paketWisuda">
+<option value="350">350.000 | 15 file | Bonus 10R 1</option>
+<option value="675">675.000 | 30 file | Bonus 10R 2</option>
+</select>
+<label>Jumlah Orang</label>
+<input type="number" id="orangWisuda" min="1" max="12">
+<div>Tambahan orang 25.000 | Tambahan file 25.000</div>
 </div>
 
-<!-- FORM PREWEDDING -->
-<div class="form-section" id="formPrewedding" style="display:none">
-  <label>Paket Prewedding (2 Orang)</label>
-  <select id="paketPrewedding">
-    <option value="400">Rp400.000 | Kostum 1 | 25 file | Bonus: 10R 1 + 3R 2</option>
-    <option value="680">Rp680.000 | Kostum 2 | 35 file | Bonus: 12R 1</option>
-    <option value="800">Rp800.000 | Kostum 3 | 45 file | Bonus: 12R1 + 10R1 + 3R2</option>
-  </select>
-  <div id="infoPrewedding">Tambahan file: Rp25.000/file</div>
+<div id="formPrewedding" style="display:none">
+<select id="paketPrewedding">
+<option value="400">400.000 | 25 file</option>
+<option value="680">680.000 | 35 file</option>
+<option value="800">800.000 | 45 file</option>
+</select>
+<div>Tambahan file 25.000</div>
 </div>
 
-<!-- FORM PASFOTO -->
-<div class="form-section" id="formPasfoto" style="display:none">
-  <label>Jenis Pasfoto:</label>
-  <select id="jenisPasfoto">
-    <option value="sendiri">Sendiri – Rp40.000</option>
-    <option value="berdua">Berdua – Rp50.000</option>
-  </select>
-  <label>Layanan Tambahan:</label>
-  <input type="checkbox" id="gantiWarna"> Ganti latar (+Rp20.000)<br>
-  <input type="checkbox" id="bersihkanWajah"> Bersihkan wajah (+Rp10.000)<br>
-  <input type="checkbox" id="editDasi"> Edit jas/dasi (+Rp20.000)
-  <label>Jumlah Cetak (Rp3.000 / lembar)</label>
-  <input type="number" id="jumlahCetak" min="0">
+<div id="formPasfoto" style="display:none">
+<select id="jenisPasfoto">
+<option value="sendiri">Sendiri 40.000</option>
+<option value="berdua">Berdua 50.000</option>
+</select>
+<input type="checkbox" id="gantiWarna"> Ganti latar +20.000<br>
+<input type="checkbox" id="bersihkanWajah"> Bersihkan wajah +10.000<br>
+<input type="checkbox" id="editDasi"> Edit jas +20.000<br>
+<input type="number" id="jumlahCetak" placeholder="Cetak @3.000">
 </div>
 
 <button id="diskonBtn" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
-
 <div id="countdown"></div>
 <div id="total">Total: -</div>
 
-<!-- Galeri Foto -->
 <div id="gallery"></div>
-
-<button onclick="kirimWA()">Kirim ke WhatsApp</button>
+<button onclick="kirimWA()">Kirim WhatsApp</button>
 </div>
 
-<!-- Tombol WA Floating -->
-<a href="https://wa.me/6282199327646" target="_blank" id="waFloating">📱</a>
+<a id="waFloating" href="https://wa.me/6282199327646">📱</a>
 
 <script>
 const waNumber="6282199327646";
-let diskonAktif=false;
-let totalHarga=0;
-let extraKostum=0;
-
 const diskonDeadline=new Date("2026-01-28T22:00:00+07:00");
+let diskonAktif=false,totalHarga=0,extraKostum=0;
 
-const hargaUmum={1:100000,2:200000,3:300000,4:335000,5:370000,6:400000,7:420000,8:450000,9:475000,10:500000,11:525000,12:550000,13:575000,14:600000,15:625000,16:560000};
-
-const photos = {
-  umum: ["images/img_3405.jpg","images/img_5997.jpg","images/img_9400.jpg"],
-  wisuda: ["images/img_0170.jpg","images/img_9977.jpg","images/img_2811.jpg"],
-  prewedding: ["images/img_1487.jpg","images/img_1438.jpg","images/img_1470.jpg"],
-  pasfoto: ["images/img_3298.jpg","images/img_8631.jpg","images/img_7737.jpg","images/anisa.jpg"]
+const hargaUmum={
+1:100000,2:200000,3:300000,4:335000,5:370000,
+6:400000,7:420000,8:450000,9:475000,10:500000,
+11:525000,12:550000,13:575000,14:600000,15:625000,
+16:560000
 };
 
-const formUmum=document.getElementById("formUmum");
-const formWisuda=document.getElementById("formWisuda");
-const formPrewedding=document.getElementById("formPrewedding");
-const formPasfoto=document.getElementById("formPasfoto");
-const layanan=document.getElementById("layanan");
-const orangUmum=document.getElementById("orangUmum");
-const paketWisuda=document.getElementById("paketWisuda");
-const orangWisuda=document.getElementById("orangWisuda");
-const paketPrewedding=document.getElementById("paketPrewedding");
-const jenisPasfoto=document.getElementById("jenisPasfoto");
-const gantiWarna=document.getElementById("gantiWarna");
-const bersihkanWajah=document.getElementById("bersihkanWajah");
-const editDasi=document.getElementById("editDasi");
-const jumlahCetak=document.getElementById("jumlahCetak");
-const totalDiv=document.getElementById("total");
-const gallery=document.getElementById("gallery");
-const tambahKostumBtn=document.getElementById("tambahKostumBtn");
-const diskonBtn=document.getElementById("diskonBtn");
+const photos={
+umum:["images/IMG_3405.jpg","images/IMG_5997.jpg"],
+wisuda:["images/IMG_0170.jpg","images/IMG_9977.jpg"],
+prewedding:["images/IMG_1487.jpg","images/IMG_1470.jpg"],
+pasfoto:["images/IMG_3298.jpg","images/anisa.jpg"]
+};
 
-function tampil(){
-  totalDiv.innerText= totalHarga>0?"Total: Rp "+totalHarga.toLocaleString("id-ID"):"Total: -";
-}
+function tampil(){total.innerText=totalHarga?`Total: Rp ${totalHarga.toLocaleString("id-ID")}`:"Total:-"}
 
 function hitungUmum(){
-  const o=parseInt(orangUmum.value)||0;
-  let h=0;
-  if(o<=15) h=hargaUmum[o]||0;
-  else if(o<=25) h=o*30000;
-  else h=o*25000;
-  if(diskonAktif) h*=0.9;
-  totalHarga=h + extraKostum*50000;
-  tampil();
-}
-
-function hitungWisuda(){
-  let h=parseInt(paketWisuda.value);
-  const o=parseInt(orangWisuda.value)||0;
-  const max=o>parseInt(orangWisuda.max)?parseInt(orangWisuda.max):0;
-  if(o>parseInt(orangWisuda.max)) h+=(o-parseInt(orangWisuda.max))*25000;
-  if(diskonAktif) h*=0.9;
-  totalHarga=h;
-  tampil();
-}
-
-function hitungPrewedding(){
-  totalHarga=parseInt(paketPrewedding.value);
-  if(diskonAktif) totalHarga*=0.9;
-  tampil();
-}
-
-function hitungPasfoto(){
-  let h=jenisPasfoto.value==="sendiri"?40000:50000;
-  if(gantiWarna.checked) h+=20000;
-  if(bersihkanWajah.checked) h+=10000;
-  if(editDasi.checked) h+=20000;
-  h+=(parseInt(jumlahCetak.value)||0)*3000;
-  if(diskonAktif) h*=0.9;
-  totalHarga=h;
-  tampil();
+let o=+orangUmum.value||0,h=0;
+if(o<=15)h=hargaUmum[o]||0;
+else if(o<=25)h=o*30000;
+else h=o*25000;
+if(diskonAktif)h*=0.9;
+totalHarga=h+extraKostum*50000;tampil();
 }
 
 function toggleDiskon(){
-  const now=new Date();
-  if(now>diskonDeadline) return;
-  diskonAktif=!diskonAktif;
-  tambahKostumBtn.disabled=!diskonAktif;
-  if(layanan.value==="umum") hitungUmum();
+if(new Date()>diskonDeadline)return;
+diskonAktif=!diskonAktif;
+tambahKostumBtn.disabled=!diskonAktif;
+if(layanan.value==="umum")hitungUmum();
 }
 
-function tambahKostum(){
-  extraKostum++;
-  hitungUmum();
+function tambahKostum(){extraKostum++;hitungUmum()}
+
+function updateGallery(){
+gallery.innerHTML="";
+(photos[layanan.value]||[]).forEach(s=>{
+let i=document.createElement("img");i.src=s;gallery.appendChild(i)
+})
 }
 
 function updateForm(){
-  formUmum.style.display=layanan.value==="umum"?"block":"none";
-  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
-  formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
-  formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
-  totalHarga=0;
-  extraKostum=0;
-  tampil();
-  updateGallery();
+formUmum.style.display=layanan.value==="umum"?"block":"none";
+formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
+formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
+formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
+totalHarga=0;extraKostum=0;tampil();updateGallery();
 }
-
-function updateGallery(){
-  gallery.innerHTML="";
-  const service=layanan.value;
-  if(photos[service]){
-    photos[service].forEach(src=>{
-      const img=document.createElement("img");
-      img.src=src;
-      gallery.appendChild(img);
-    });
-  }
-}
-
-// Countdown Diskon
-function updateCountdown(){
-  const now=new Date();
-  const distance=diskonDeadline-now;
-  if(distance<0){
-    document.getElementById("countdown").innerText="Diskon sudah berakhir";
-    return;
-  }
-  const days=Math.floor(distance/(1000*60*60*24));
-  const hours=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-  const minutes=Math.floor((distance%(1000*60*60))/(1000*60));
-  const seconds=Math.floor((distance%(1000*60))/1000);
-  document.getElementById("countdown").innerText=`Diskon 10% berakhir dalam: ${days} hari ${hours} jam ${minutes} mnt ${seconds} dtk`;
-}
-setInterval(updateCountdown,1000);
-
-layanan.onchange=updateForm;
-orangUmum.oninput=hitungUmum;
-paketWisuda.onchange=hitungWisuda;
-orangWisuda.oninput=hitungWisuda;
-paketPrewedding.onchange=hitungPrewedding;
-jenisPasfoto.onchange=hitungPasfoto;
-gantiWarna.onchange=hitungPasfoto;
-bersihkanWajah.onchange=hitungPasfoto;
-editDasi.onchange=hitungPasfoto;
-jumlahCetak.oninput=hitungPasfoto;
 
 function kirimWA(){
-  if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value){
-    alert("Lengkapi nama, WA, tanggal & jam booking");
-    return;
-  }
-  const msg=`Halo Logaloga Studio
+if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value)return alert("Lengkapi data");
+let msg=`Halo Logaloga Studio
 Nama: ${nama.value}
 WA: ${hp.value}
 Tanggal: ${tanggalBooking.value}
 Jam: ${jamBooking.value}
-Layanan: ${layanan.value}
 Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
-  window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
+window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
 }
+
+function countdown(){
+let d=diskonDeadline-new Date();
+if(d<0)return countdown.innerText="Diskon berakhir";
+let hari=Math.floor(d/86400000);
+countdown.innerText=`Diskon berakhir ${hari} hari lagi`;
+}
+setInterval(countdown,1000);
+
+layanan.onchange=updateForm;
+orangUmum.oninput=hitungUmum;
 updateForm();
 </script>
 </body>
 </html>
-
-
-
-
