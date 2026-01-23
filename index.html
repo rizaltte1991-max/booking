@@ -169,46 +169,38 @@ function tampil(){
 }
 
 function hitungUmum(){
-  const o = parseInt(orangUmum.value) || 0;
-  let harga = 0;
-  let kostum = "-";
-  let file = "-";
+  const o = parseInt(orangUmum.value);
 
-  if(o === 0){
+  if(!o || o < 1){
     totalHarga = 0;
-    infoUmum.innerHTML = "📸 File: -<br>👕 Kostum: -<br>➕ Tambahan file: Rp25.000 / file";
+    infoUmum.innerHTML = "";
     tampil();
     return;
   }
 
-  // HARGA
+  let harga = 0;
+
   if(o <= 15){
-    harga = hargaUmum[o] || 0;
+    harga = hargaUmum[o];
   } else if(o <= 25){
     harga = o * 30000;
   } else {
     harga = o * 25000;
   }
 
-  // FIX KHUSUS 16 ORANG
+  // FIX MUTLAK
   if(o === 16){
     harga = 560000;
   }
 
-  // KOSTUM
-  if(o <= 3) kostum = "1 set kostum";
-  else if(o <= 15) kostum = "2 set kostum";
-  else kostum = "3 set kostum";
-
-  // FILE (informasi saja)
-  file = "File digital (sesuai paket)";
+  let kostum = o <= 3 ? "1 set" : o <= 15 ? "2 set" : "3 set";
 
   totalHarga = harga;
 
   infoUmum.innerHTML = `
-    📸 File: ${file}
-    <br>👕 Kostum: ${kostum}
-    <br>➕ Tambahan file: Rp25.000 / file
+    👕 Kostum: ${kostum}<br>
+    📸 File digital sesuai paket<br>
+    ➕ Tambahan file: Rp25.000 / file
   `;
 
   tampil();
@@ -221,16 +213,17 @@ function hitungUmum(){
 }
 
 function hitungWisuda(){
-  let paket = parseInt(paketWisuda.value);
-  let max = paket === 350000 ? 10 : 12;
-  let o = parseInt(orangWisuda.value) || 0;
-  let h = paket;
+  const o = parseInt(orangWisuda.value) || 0;
+  const paket = paketWisuda.value;
+
+  let harga = paket === "350" ? 350000 : 675000;
+  let max = paket === "350" ? 10 : 12;
 
   if(o > max){
-    h += (o - max) * 25000;
+    harga += (o - max) * 25000;
   }
 
-  totalHarga = h;
+  totalHarga = harga;
   tampil();
 }
 
@@ -278,36 +271,62 @@ function updateCountdown(){
 setInterval(updateCountdown,1000);
 updateCountdown();
 
-layanan.onchange=updateForm;
-orangUmum.oninput=hitungUmum;
-paketWisuda.onchange=hitungWisuda;
-orangWisuda.oninput=hitungWisuda;
-paketPrewedding.onchange=hitungPrewedding;
-jenisPasfoto.onchange=hitungPasfoto;
-gantiWarna.onchange=hitungPasfoto;
-bersihkanWajah.onchange=hitungPasfoto;
-editDasi.onchange=hitungPasfoto;
-jumlahCetak.oninput=hitungPasfoto;
+<script>
+/* =========================
+   EVENT LISTENER LENGKAP
+   (WAJIB DI PALING BAWAH)
+========================= */
 
+// ganti layanan
+layanan.addEventListener("change", updateForm);
+
+// FOTO UMUM
+orangUmum.addEventListener("input", hitungUmum);
+
+// WISUDA
+paketWisuda.addEventListener("change", hitungWisuda);
+orangWisuda.addEventListener("input", hitungWisuda);
+
+// PREWEDDING
+paketPrewedding.addEventListener("change", hitungPrewedding);
+
+// PASFOTO
+jenisPasfoto.addEventListener("change", hitungPasfoto);
+gantiWarna.addEventListener("change", hitungPasfoto);
+bersihkanWajah.addEventListener("change", hitungPasfoto);
+editDasi.addEventListener("change", hitungPasfoto);
+jumlahCetak.addEventListener("input", hitungPasfoto);
+
+/* =========================
+   KIRIM WHATSAPP
+========================= */
 function kirimWA(){
-  if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value){
+  if(!nama.value || !hp.value || !tanggalBooking.value || !jamBooking.value){
     alert("Lengkapi data");
     return;
   }
-  let msg=`Halo Logaloga Studio
+
+  let msg = `Halo Logaloga Studio
 Nama: ${nama.value}
 WA: ${hp.value}
 Tanggal: ${tanggalBooking.value}
 Jam: ${jamBooking.value}
 Layanan: ${layanan.value}
 Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
-  window.open("https://wa.me/"+waNumber+"?text="+encodeURIComponent(msg));
+
+  window.open(
+    "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(msg)
+  );
 }
 
+/* =========================
+   JALANKAN AWAL
+========================= */
 updateForm();
 </script>
 </body>
 </html>
+
 
 
 
