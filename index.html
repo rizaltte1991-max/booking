@@ -169,38 +169,47 @@ function tampil(){
 }
 
 function hitungUmum(){
-  const o=parseInt(orangUmum.value)||0;
-  let h=0;
-  let kostum="-";
-  let file="-";
+  const o = parseInt(orangUmum.value) || 0;
+  let harga = 0;
+  let kostum = "-";
+  let file = "-";
 
-  if(o<=0){
-    totalHarga=0;
-    document.getElementById("infoUmum").innerText="";
+  if(o === 0){
+    totalHarga = 0;
+    infoUmum.innerHTML = "📸 File: -<br>👕 Kostum: -<br>➕ Tambahan file: Rp25.000 / file";
     tampil();
     return;
   }
 
-  if(o<=15){
-    h=hargaUmum[o]||0;
-  }else if(o<=25){
-    h=o*30000;
-  }else{
-    h=o*25000;
+  // HARGA
+  if(o <= 15){
+    harga = hargaUmum[o] || 0;
+  } else if(o <= 25){
+    harga = o * 30000;
+  } else {
+    harga = o * 25000;
+  }
+
+  // FIX KHUSUS 16 ORANG
+  if(o === 16){
+    harga = 560000;
   }
 
   // KOSTUM
-  if(o<=3) kostum="1 set kostum";
-  else if(o<=15) kostum="2 set kostum";
-  else kostum="3 set kostum";
+  if(o <= 3) kostum = "1 set kostum";
+  else if(o <= 15) kostum = "2 set kostum";
+  else kostum = "3 set kostum";
 
-  // FILE
-  file = (o*3)+" file edit";
+  // FILE (informasi saja)
+  file = "File digital (sesuai paket)";
 
-  totalHarga = diskonAktif ? h*0.9 : h;
+  totalHarga = harga;
 
-  document.getElementById("infoUmum").innerText =
-    `✔ ${kostum} • ${file} • Kostum sudah termasuk`;
+  infoUmum.innerHTML = `
+    📸 File: ${file}
+    <br>👕 Kostum: ${kostum}
+    <br>➕ Tambahan file: Rp25.000 / file
+  `;
 
   tampil();
 }
@@ -299,6 +308,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
