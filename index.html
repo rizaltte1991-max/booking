@@ -78,9 +78,13 @@ button{cursor:pointer;font-weight:bold}
 <div class="form-section" id="formWisuda" style="display:none">
   <label>Paket Wisuda</label>
   <select id="paketWisuda">
-    <option value="350">Rp350.000 | 15 file | Bonus cetak 10R 1 lembar (max 10 org)</option>
-    <option value="675">Rp675.000 | 30 file | Bonus cetak 10R 2 lembar (max 12 org)</option>
-  </select>
+  <option value="350000">
+    Rp350.000 | 15 file | Bonus cetak 10R 1 lembar (max 10 org)
+  </option>
+  <option value="675000">
+    Rp675.000 | 30 file | Bonus cetak 10R 2 lembar (max 12 org)
+  </option>
+</select>
 
   <label>Jumlah Orang</label>
   <input type="number" id="orangWisuda" min="1">
@@ -158,12 +162,16 @@ function hitungUmum(){
 }
 
 function hitungWisuda(){
-  let paket=parseInt(paketWisuda.value);
-  let max=paket===350?10:12;
-  let o=parseInt(orangWisuda.value)||0;
-  let h=paket;
-  if(o>max) h+=(o-max)*25000;
-  totalHarga=h;
+  let paket = parseInt(paketWisuda.value);
+  let max = paket === 350000 ? 10 : 12;
+  let o = parseInt(orangWisuda.value) || 0;
+  let h = paket;
+
+  if(o > max){
+    h += (o - max) * 25000;
+  }
+
+  totalHarga = h;
   tampil();
 }
 
@@ -241,3 +249,4 @@ updateForm();
 </script>
 </body>
 </html>
+
