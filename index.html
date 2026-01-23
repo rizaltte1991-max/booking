@@ -99,10 +99,19 @@ button{cursor:pointer;font-weight:bold}
 <div class="form-section" id="formPrewedding" style="display:none">
   <label>Paket Prewedding (2 Orang)</label>
   <select id="paketPrewedding">
-    <option value="400">Rp400.000 | 25 file | Bonus 10R 1 + 3R 2</option>
-    <option value="680">Rp680.000 | 35 file | Bonus 12R 1 (cetak luar)</option>
-    <option value="800">Rp800.000 | 45 file | Bonus lengkap</option>
-  </select>
+  <option value="400000">
+    Rp400.000 | Kostum 1 | 25 file
+    | Bonus: 10R 1 + 3R 2
+  </option>
+  <option value="680000">
+    Rp680.000 | Kostum 2 | 35 file
+    | Bonus: 12R 1
+  </option>
+  <option value="800000">
+    Rp800.000 | Kostum 3 | 45 file
+    | Bonus: 12R1 + 10R1 + 3R2
+  </option>
+</select>
   <div class="info">Tambahan file: Rp25.000 / file</div>
 </div>
 
@@ -176,7 +185,7 @@ function hitungWisuda(){
 }
 
 function hitungPrewedding(){
-  totalHarga=parseInt(paketPrewedding.value);
+  totalHarga = parseInt(paketPrewedding.value) || 0;
   tampil();
 }
 
@@ -249,4 +258,5 @@ updateForm();
 </script>
 </body>
 </html>
+
 
