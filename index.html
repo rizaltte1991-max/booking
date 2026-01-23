@@ -73,6 +73,16 @@ button{cursor:pointer;font-weight:bold}
   <button id="tambahKostumBtn" onclick="tambahKostum()">Tambah Kostum +50.000</button>
   <div class="info">Tambahan file: Rp25.000 / file</div>
 </div>
+  <div id="infoUmum" style="
+  margin-top:8px;
+  font-size:13px;
+  color:#ffd700;
+  text-align:center;
+">
+  📸 File: -
+  <br>👕 Kostum: -
+  <br>➕ Tambahan file: Rp25.000 / file
+</div>
 
 <!-- WISUDA -->
 <div class="form-section" id="formWisuda" style="display:none">
@@ -160,14 +170,32 @@ function tampil(){
 }
 
 function hitungUmum(){
-  let o=parseInt(orangUmum.value)||0;
-  let h=0;
-  if(o<=16) h=hargaUmum[o]||0;
-  else if(o<=25) h=o*30000;
-  else h=o*25000;
-  totalHarga=h + kostum*50000;
-  if(diskonAktif) totalHarga*=0.9;
+  const o = parseInt(orangUmum.value) || 0;
+  let h = 0;
+
+  // hitung harga
+  if(o <= 15) h = hargaUmum[o] || 0;
+  else if(o <= 25) h = o * 30000;
+  else h = o * 25000;
+
+  // hitung kostum otomatis (INCLUDE)
+  let kostum = 1;
+  if(o >= 4 && o <= 15) kostum = 2;
+  if(o >= 16) kostum = 3;
+
+  // jumlah file
+  let file = o; // 1 orang = 1 file
+
+  if(diskonAktif) h *= 0.9;
+
+  totalHarga = h;
   tampil();
+
+  document.getElementById("infoUmum").innerHTML = `
+    📸 File: ${file} file<br>
+    👕 Kostum: ${kostum} set <span style="color:#7CFF7C">(include)</span><br>
+    ➕ Tambahan file: Rp25.000 / file
+  `;
 }
 
 function hitungWisuda(){
@@ -258,5 +286,6 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
