@@ -179,9 +179,15 @@ function hitungUmum(){
   const o = parseInt(orangUmum.value)||0;
   let h = 0;
 
-  if(o<=15) h = hargaUmum[o] || 0;
-  else if(o<=25) h = o * 30000;
-  else h = o * 25000;
+  if(o <= 16){
+    h = hargaUmum[o] || 0;
+  } 
+  else if(o <= 25){
+    h = o * 30000;
+  } 
+  else {
+    h = o * 25000;
+  }
 
   let kostum = o<=3 ? "1 set" : o<=15 ? "2 set" : "3 set";
   let file = o<=15 ? "15 file" : "30 file";
@@ -291,3 +297,4 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
