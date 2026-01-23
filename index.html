@@ -176,31 +176,23 @@ const deadline = new Date("2026-01-28T22:00:00");
 
 /* ================== UMUM ================== */
 function hitungUmum(){
-  const o = parseInt(orangUmum.value)||0;
+  const o = parseInt(orangUmum.value);
+  if(!o) return;
+
   let h = 0;
 
-  if(o <= 16){
-    h = hargaUmum[o] || 0;
-  } 
-  else if(o <= 25){
+  // 🔒 KUNCI MATI DI SINI
+  if (hargaUmum[o]) {
+    h = hargaUmum[o];
+  }
+  else if (o <= 25) {
     h = o * 30000;
-  } 
+  }
   else {
     h = o * 25000;
   }
 
-  let kostum = o<=3 ? "1 set" : o<=15 ? "2 set" : "3 set";
-  let file = o<=15 ? "15 file" : "30 file";
-
-  infoUmum.innerHTML = `
-    📸 File: ${file}
-    <br>👕 Kostum: ${kostum}
-    <br>➕ Tambahan file: Rp25.000 / file
-  `;
-
-  totalHarga = h + (extraKostum * 50000);
-  if(diskonAktif) totalHarga *= 0.9;
-
+  totalHarga = h;
   tampil();
 }
 
@@ -297,4 +289,5 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
