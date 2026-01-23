@@ -6,69 +6,17 @@
 <title>Logaloga Studio Booking</title>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #fff3f3;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  background: #ffd6d6;
-  text-align: center;
-  padding: 15px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.container {
-  max-width: 400px;
-  margin: 20px auto;
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-label {
-  font-size: 14px;
-  display: block;
-  margin-top: 10px;
-}
-
-input, select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 3px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-#kostumBtn { background: orange; }
-#diskonBtn { background: deeppink; color: white; }
-#waBtn { background: #25D366; color: white; }
-
-.total {
-  margin-top: 10px;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.gallery img {
-  width: 48%;
-  border-radius: 6px;
-  margin-top: 5px;
-}
+body{font-family:Arial,sans-serif;background:#fff5f5;margin:0}
+header{text-align:center;padding:15px;background:#ffd6d6;font-weight:bold}
+.container{max-width:420px;margin:20px auto;background:#fff;padding:15px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.1)}
+label{display:block;margin-top:10px;font-size:14px}
+input,select,button{width:100%;padding:8px;margin-top:4px;border-radius:5px;border:1px solid #ccc}
+button{border:none;font-weight:bold;margin-top:10px;cursor:pointer}
+#kostumBtn{background:#ffb703}
+#diskonBtn{background:#ff006e;color:#fff}
+#waBtn{background:#25d366;color:#fff}
+.total{margin-top:10px;font-weight:bold}
+.gallery img{width:48%;margin-top:5px;border-radius:6px}
 </style>
 </head>
 
@@ -77,6 +25,7 @@ button {
 <header>✨ Logaloga Studio Booking ✨</header>
 
 <div class="container">
+
 <label>Nama</label>
 <input id="nama">
 
@@ -90,94 +39,143 @@ button {
 <input type="time" id="jam">
 
 <label>Layanan</label>
-<select id="layanan" onchange="hitung()">
+<select id="layanan" onchange="updateForm()">
   <option value="umum">Foto Umum</option>
   <option value="wisuda">Foto Wisuda</option>
   <option value="pasfoto">Pas Foto</option>
   <option value="prewedding">Prewedding</option>
 </select>
 
-<label>Jumlah Orang</label>
-<input type="number" id="jumlah" value="1" min="1" onchange="hitung()">
-
-<button id="kostumBtn" onclick="tambahKostum()">Tambah Kostum +50.000</button>
-<button id="diskonBtn" onclick="diskon()">Aktifkan Diskon 10%</button>
-
-<div class="total" id="totalHarga">Total: Rp 0</div>
-
-<div class="gallery">
-  <img src="images/IMG_0170.jpg">
-  <img src="images/IMG_1438.jpg">
+<!-- FOTO UMUM -->
+<div id="formUmum">
+  <label>Jumlah Orang</label>
+  <input type="number" id="orangUmum" min="1" max="30" oninput="hitung()">
+  <button id="kostumBtn" onclick="tambahKostum()">Tambah Kostum +50.000</button>
+  <div>Tambahan file: Rp25.000 / file</div>
 </div>
+
+<!-- WISUDA -->
+<div id="formWisuda" style="display:none">
+  <label>Paket Wisuda</label>
+  <select id="paketWisuda" onchange="hitung()">
+    <option value="350000">350.000 | 15 File | Bonus 10R 1</option>
+    <option value="675000">675.000 | 30 File | Bonus 10R 2</option>
+  </select>
+
+  <label>Jumlah Orang</label>
+  <input type="number" id="orangWisuda" min="1" max="12" oninput="hitung()">
+  <div>Tambahan orang 25.000 / orang</div>
+</div>
+
+<!-- PAS FOTO -->
+<div id="formPasfoto" style="display:none">
+  <select id="jenisPasfoto" onchange="hitung()">
+    <option value="40000">Sendiri 40.000</option>
+    <option value="50000">Berdua 50.000</option>
+  </select>
+</div>
+
+<!-- PREWEDDING -->
+<div id="formPrewedding" style="display:none">
+  <select id="paketPrewed" onchange="hitung()">
+    <option value="400000">400.000 | 25 File</option>
+    <option value="680000">680.000 | 35 File</option>
+    <option value="800000">800.000 | 45 File</option>
+  </select>
+</div>
+
+<button id="diskonBtn" onclick="toggleDiskon()">Diskon 10%</button>
+
+<div class="total" id="total">Total: Rp 0</div>
+
+<div class="gallery" id="gallery"></div>
 
 <button id="waBtn" onclick="kirimWA()">Kirim WhatsApp</button>
 
 </div>
 
 <script>
-let harga = 0;
-let extra = 0;
-let diskonAktif = false;
+let extraKostum = 0;
+let diskon = false;
+let totalHarga = 0;
 
-function hitung() {
-  let layanan = document.getElementById("layanan").value;
-  let jml = parseInt(document.getElementById("jumlah").value);
+const hargaUmum = {
+  1:100000,2:200000,3:300000,4:335000,5:370000,
+  6:400000,7:420000,8:450000,9:475000,10:500000,
+  11:525000,12:550000,13:575000,14:600000,15:625000,
+  16:560000
+};
 
-  // HARGA DASAR
-  let base = 0;
-  if (layanan == "umum") base = 40000;
-  if (layanan == "wisuda") base = 60000;
-  if (layanan == "pasfoto") base = 25000;
-  if (layanan == "prewedding") base = 500000;
+const photos = {
+  umum:["images/IMG_0170.jpg","images/IMG_1438.jpg"],
+  wisuda:["images/IMG_9977.jpg","images/IMG_1470.jpg"],
+  pasfoto:["images/IMG_3298.jpg","images/anisa.jpg"],
+  prewedding:["images/IMG_1487.jpg","images/IMG_3405.jpg"]
+};
 
-  // KHUSUS FOTO UMUM 16 ORANG
-  if (layanan == "umum" && jml == 16) {
-    harga = 560000;
-  } 
-  else {
-    harga = base * jml;
-  }
-
-  let total = harga + extra;
-
-  if (diskonAktif) {
-    total = total * 0.9;
-  }
-
-  document.getElementById("totalHarga").innerHTML =
-    "Total: Rp " + total.toLocaleString("id-ID");
+function updateGallery(l){
+  gallery.innerHTML="";
+  photos[l].forEach(f=>{
+    let img=document.createElement("img");
+    img.src=f;
+    gallery.appendChild(img);
+  });
 }
 
-function tambahKostum() {
-  extra += 50000;
+function hitung(){
+  let layanan=document.getElementById("layanan").value;
+  totalHarga=0;
+
+  if(layanan==="umum"){
+    let o=+orangUmum.value||0;
+    if(o<=15) totalHarga=hargaUmum[o]||0;
+    else if(o<=25) totalHarga=o*30000;
+    else totalHarga=o*25000;
+    totalHarga+=extraKostum*50000;
+  }
+
+  if(layanan==="wisuda"){
+    let paket=+paketWisuda.value;
+    let orang=+orangWisuda.value||1;
+    totalHarga=paket+(orang>1?(orang-1)*25000:0);
+  }
+
+  if(layanan==="pasfoto"){
+    totalHarga=+jenisPasfoto.value;
+  }
+
+  if(layanan==="prewedding"){
+    totalHarga=+paketPrewed.value;
+  }
+
+  if(diskon) totalHarga*=0.9;
+
+  total.innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+}
+
+function updateForm(){
+  formUmum.style.display=layanan.value==="umum"?"block":"none";
+  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
+  formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
+  formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
+  extraKostum=0;diskon=false;
+  updateGallery(layanan.value);
   hitung();
 }
 
-function diskon() {
-  diskonAktif = !diskonAktif;
-  hitung();
+function tambahKostum(){extraKostum++;hitung();}
+function toggleDiskon(){diskon=!diskon;hitung();}
+
+function kirimWA(){
+  let msg=`Halo Logaloga Studio
+Nama: ${nama.value}
+WA: ${wa.value}
+Layanan: ${layanan.value}
+Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
+  window.open("https://wa.me/6282199327646?text="+encodeURIComponent(msg));
 }
 
-function kirimWA() {
-  let nama = document.getElementById("nama").value;
-  let wa = document.getElementById("wa").value;
-  let tanggal = document.getElementById("tanggal").value;
-  let jam = document.getElementById("jam").value;
-  let layanan = document.getElementById("layanan").value;
-  let jml = document.getElementById("jumlah").value;
-  let total = document.getElementById("totalHarga").innerText;
-
-  let pesan = `Halo Logaloga Studio,%0A
-Nama: ${nama}%0A
-WA: ${wa}%0A
-Tanggal: ${tanggal}%0A
-Jam: ${jam}%0A
-Layanan: ${layanan}%0A
-Jumlah Orang: ${jml}%0A
-${total}`;
-
-  window.open("https://wa.me/628XXXXXXXXXX?text=" + pesan);
-}
+updateForm();
 </script>
 
 </body>
