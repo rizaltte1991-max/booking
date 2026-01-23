@@ -70,18 +70,17 @@ button{cursor:pointer;font-weight:bold}
 <div class="form-section" id="formUmum">
   <label>Jumlah Orang</label>
   <input type="number" id="orangUmum" min="1" max="30">
-  <button id="tambahKostumBtn" onclick="tambahKostum()">Tambah Kostum +50.000</button>
-  <div class="info">Tambahan file: Rp25.000 / file</div>
-</div>
+
   <div id="infoUmum" style="
-  margin-top:8px;
-  font-size:13px;
-  color:#ffd700;
-  text-align:center;
-">
-  📸 File: -
-  <br>👕 Kostum: -
-  <br>➕ Tambahan file: Rp25.000 / file
+    margin-top:8px;
+    font-size:13px;
+    color:#ffd700;
+    text-align:center;
+  ">
+    📸 File: -
+    <br>👕 Kostum: -
+    <br>➕ Tambahan file: Rp25.000 / file
+  </div>
 </div>
 
 <!-- WISUDA -->
@@ -170,27 +169,41 @@ function tampil(){
 }
 
 function hitungUmum(){
-  const o = parseInt(orangUmum.value) || 0;
-  let h = 0;
+  const o=parseInt(orangUmum.value)||0;
+  let h=0;
+  let kostum="-";
+  let file="-";
 
-  // hitung harga
-  if(o <= 15) h = hargaUmum[o] || 0;
-  else if(o <= 25) h = o * 30000;
-  else h = o * 25000;
+  if(o<=0){
+    totalHarga=0;
+    document.getElementById("infoUmum").innerText="";
+    tampil();
+    return;
+  }
 
-  // hitung kostum otomatis (INCLUDE)
-  let kostum = 1;
-  if(o >= 4 && o <= 15) kostum = 2;
-  if(o >= 16) kostum = 3;
+  if(o<=15){
+    h=hargaUmum[o]||0;
+  }else if(o<=25){
+    h=o*30000;
+  }else{
+    h=o*25000;
+  }
 
-  // jumlah file
-  let file = o; // 1 orang = 1 file
+  // KOSTUM
+  if(o<=3) kostum="1 set kostum";
+  else if(o<=15) kostum="2 set kostum";
+  else kostum="3 set kostum";
 
-  if(diskonAktif) h *= 0.9;
+  // FILE
+  file = (o*3)+" file edit";
 
-  totalHarga = h;
+  totalHarga = diskonAktif ? h*0.9 : h;
+
+  document.getElementById("infoUmum").innerText =
+    `✔ ${kostum} • ${file} • Kostum sudah termasuk`;
+
   tampil();
-
+}
   document.getElementById("infoUmum").innerHTML = `
     📸 File: ${file} file<br>
     👕 Kostum: ${kostum} set <span style="color:#7CFF7C">(include)</span><br>
@@ -286,6 +299,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
