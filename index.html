@@ -243,8 +243,13 @@ function tampil(){
 
 /* ================== DISKON ================== */
 function toggleDiskon(){
+  if (new Date() > diskonDeadline) return;
   diskonAktif = !diskonAktif;
-  if(layanan.value==="umum") hitungUmum();
+
+  if (layanan.value === "umum") hitungUmum();
+  else if (layanan.value === "wisuda") hitungWisuda();
+  else if (layanan.value === "prewedding") hitungPrewedding();
+  else tampil(); // pasfoto: diskon TIDAK berlaku
 }
 
 function updateCountdown(){
@@ -295,6 +300,7 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 </script>
 </body>
 </html>
+
 
 
 
