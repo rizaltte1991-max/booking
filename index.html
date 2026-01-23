@@ -122,12 +122,20 @@ function hitungUmum(){
 function tambahKostum(){extraKostum++;hitungUmum()}
 
 function hitungWisuda(){
-  let h=parseInt(paketWisuda.value);
-  let max=h===350000?10:12;
-  let o=parseInt(orangWisuda.value)||0;
-  if(o>max)h+=(o-max)*25000;
-  if(diskonAktif)h*=0.9;
-  totalHarga=Math.round(h);tampil();
+  let paket = parseInt(paketWisuda.value);
+  let o = parseInt(orangWisuda.value) || 0;
+
+  let maxOrang = paket === 350000 ? 10 : 12;
+
+  let h = paket;
+  if (o > maxOrang) {
+    h += (o - maxOrang) * 25000;
+  }
+
+  if (diskonAktif) h *= 0.9;
+
+  totalHarga = Math.round(h);
+  tampil();
 }
 
 function hitungPrewedding(){
@@ -192,3 +200,4 @@ function kirimWA(){
 </script>
 </body>
 </html>
+
