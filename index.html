@@ -211,10 +211,18 @@ function hitungUmum(){
 }
 
 function tambahKostum(){
+  // ❌ Kostum hanya boleh jika diskon aktif
+  if(!diskonAktif){
+    alert("Aktifkan diskon terlebih dahulu untuk menambah kostum");
+    return;
+  }
+
+  // ❌ Hanya berlaku di Foto Umum
+  if(layanan.value !== "umum") return;
+
   extraKostum++;
   hitungUmum();
 }
-
 /* ================== WISUDA ================== */
 function hitungWisuda(){
   let h = parseInt(paketWisuda.value);
@@ -263,6 +271,7 @@ function toggleDiskon(){
   if(layanan.value==="umum") hitungUmum();
   else if(layanan.value==="wisuda") hitungWisuda();
   else if(layanan.value==="prewedding") hitungPrewedding();
+  tambahKostumBtn.disabled = !diskonAktif;
 }
 
 /* ================== COUNTDOWN ================== */
@@ -316,9 +325,11 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 }
 
 updateForm();
+  tambahKostumBtn.disabled = !diskonAktif || layanan.value !== "umum";
 </script>
 </body>
 </html>
+
 
 
 
