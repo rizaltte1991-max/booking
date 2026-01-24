@@ -165,6 +165,15 @@ const hargaUmum = {
   11:525000,12:550000,13:575000,14:600000,15:625000,
   16:560000
 };
+  function getFileUmum(jumlah){
+  if(jumlah===1) return 7;
+  if(jumlah===2) return 15;
+  if(jumlah===3) return 20;
+  if(jumlah===4) return 25;
+  if(jumlah>=5 && jumlah<=10) return 25;
+  if(jumlah>=11 && jumlah<=30) return 30;
+  return "-";
+}
 let totalHarga = 0;
 let extraKostum = 0;
 let diskonAktif = false;
@@ -172,23 +181,44 @@ const diskonDeadline = new Date("2026-01-28T22:00:00");
 
 /* ================== UMUM ================== */
 function hitungUmum(){
-  const o = parseInt(orangUmum.value)||0;
+  const o = parseInt(orangUmum.value);
+  if(!o){
+    infoUmum.innerHTML = `
+      📸 File: -
+      <br>👕 Kostum: -
+      <br>➕ Tambahan file: Rp25.000 / file
+    `;
+    totalHarga = 0;
+    tampil();
+    return;
+  }
+
   let h = 0;
-  if(hargaUmum[o]) h = hargaUmum[o];
-  else if(o<=25) h=o*30000;
-  else h=o*25000;
 
-  // Tambah biaya kostum
-  h += extraKostum*50000;
+  if (hargaUmum[o]) {
+    h = hargaUmum[o];
+  } else if (o <= 25) {
+    h = o * 30000;
+  } else {
+    h = o * 25000;
+  }
 
-  if(diskonAktif) h = Math.round(h*0.9);
+  // JUMLAH FILE
+  const file = getFileUmum(o);
+
+  // JUMLAH KOSTUM (INFO SAJA)
+  let kostum = "-";
+  if(o>=1 && o<=3) kostum = "1 set";
+  else if(o>=4 && o<=15) kostum = "2 set";
+  else if(o>=16 && o<=30) kostum = "3 set";
+
+  infoUmum.innerHTML = `
+    📸 File: ${file} file
+    <br>👕 Kostum: ${kostum}
+    <br>➕ Tambahan file: Rp25.000 / file
+  `;
 
   totalHarga = h;
-
-  // Update info
-  let kostumSet = o<=3 ? 1 : o<=15 ? 2 : 3;
-  infoUmum.innerHTML = `📸 File: -<br>👕 Kostum: ${kostumSet} set<br>➕ Tambahan file: Rp25.000 / file`;
-
   tampil();
 }
 
@@ -301,4 +331,5 @@ updateForm();
 </script>
 </body>
 </html>
+
 
