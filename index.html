@@ -266,17 +266,36 @@ function tampil(){
 
 /* ================== DISKON ================== */
 function toggleDiskon(){
-  if(layanan.value==="pasfoto") return; // diskon tidak berlaku
+  // cek deadline
+  if (new Date() > diskonDeadline){
+    alert("Diskon sudah berakhir");
+    return;
+  }
+
   diskonAktif = !diskonAktif;
-  if(layanan.value==="umum") hitungUmum();
-  else if(layanan.value==="wisuda") hitungWisuda();
-  else if(layanan.value==="prewedding") hitungPrewedding();
-  tambahKostumBtn.disabled = !diskonAktif;
+
+  // aktif/nonaktif tombol kostum
+  tambahKostumBtn.disabled = !diskonAktif || layanan.value !== "umum";
+
+  // hitung ulang sesuai layanan
+  if(layanan.value === "umum"){
+    hitungUmum();
+  }
+  else if(layanan.value === "wisuda"){
+    hitungWisuda();
+  }
+  else if(layanan.value === "prewedding"){
+    hitungPrewedding();
+  }
+  else{
+    // pasfoto TIDAK kena diskon
+    tampil();
+  }
 }
 
 /* ================== COUNTDOWN ================== */
 function updateCountdown(){
-  const s = diskonDeadline - new Date();
+  const diskonDeadline = new Date("2026-01-28T22:00:00");
   if(s<=0){ countdown.innerText="Diskon berakhir"; return; }
   const hari = Math.floor(s/86400000);
   const jam = Math.floor((s%86400000)/3600000);
@@ -326,9 +345,11 @@ Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
 
 updateForm();
   tambahKostumBtn.disabled = !diskonAktif || layanan.value !== "umum";
+  tambahKostumBtn.disabled = true;
 </script>
 </body>
 </html>
+
 
 
 
