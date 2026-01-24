@@ -295,10 +295,16 @@ function toggleDiskon(){
 
 /* ================== COUNTDOWN ================== */
 function updateCountdown(){
-  const diskonDeadline = new Date("2026-01-28T22:00:00");
-  if(s<=0){ countdown.innerText="Diskon berakhir"; return; }
-  const hari = Math.floor(s/86400000);
-  const jam = Math.floor((s%86400000)/3600000);
+  const now = new Date();
+  const s = diskonDeadline - now;
+
+  if(s <= 0){
+    countdown.innerText = "Diskon berakhir";
+    return;
+  }
+
+  const hari = Math.floor(s / 86400000);
+  const jam = Math.floor((s % 86400000) / 3600000);
   countdown.innerText = `Diskon berakhir dalam ${hari} hari ${jam} jam`;
 }
 setInterval(updateCountdown,1000);
@@ -349,6 +355,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
