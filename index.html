@@ -105,18 +105,16 @@ button{
 <!-- WISUDA -->
 <div id="formWisuda" style="display:none">
   <label>Paket Wisuda</label>
-  <select id="paketWisuda" onchange="updateBonusWisuda()">
-    <option value="350000" data-bonus="Bonus cetak 10R 1 lembar">Rp350.000 | 15 file</option>
-    <option value="675000" data-bonus="Bonus cetak 10R 2 lembar">Rp675.000 | 30 file</option>
+  <select id="paketWisuda">
+    <option value="350000">Rp350.000 – 15 file – 10 orang – Bonus 10R 1 Lembar</option>
+    <option value="675000">Rp675.000 – 30 file – 12 orang – Bonus 10R 2 Lembar</option>
   </select>
 
   <label>Jumlah Orang</label>
-  <input type="number" id="orangWisuda" min="1" onchange="hitungWisuda()">
+  <input type="number" id="orangWisuda" min="1">
 
-  <div class="info" id="bonusWisuda">Bonus: -</div>
   <div class="info">
-    Max 10 / 12 orang<br>
-    Tambahan orang: Rp25.000 / orang<br>
+    Tambahan orang: Rp25.000 / orang di atas maksimal<br>
     Tambahan file: Rp25.000 / file
   </div>
 </div>
@@ -303,3 +301,4 @@ updateForm();
 </script>
 </body>
 </html>
+
