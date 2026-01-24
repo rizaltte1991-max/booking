@@ -91,9 +91,13 @@ button{
   <label>Jumlah Orang</label>
   <input type="number" id="orangUmum" min="1" max="30">
 
-  <button id="tambahKostumBtn" onclick="tambahKostum()">
-    Tambah Kostum +Rp50.000
-  </button>
+  <button id="btnDiskon" onclick="toggleDiskon()">Aktifkan Diskon</button>
+
+<button id="tambahKostumBtn" onclick="tambahKostum()" disabled>
+  Tambah Kostum +50.000
+</button>
+
+<div id="countdown"></div>
 
   <div class="info" id="infoUmum">
     📸 File: -<br>
@@ -211,16 +215,12 @@ function hitungUmum(){
 }
 
 function tambahKostum(){
-  // ❌ Kostum hanya boleh jika diskon aktif
   if(!diskonAktif){
-    alert("Aktifkan diskon terlebih dahulu untuk menambah kostum");
+    alert("Aktifkan diskon dulu");
     return;
   }
 
-  // ❌ Hanya berlaku di Foto Umum
-  if(layanan.value !== "umum") return;
-
-  extraKostum++;
+  extraKostum += 50000;
   hitungUmum();
 }
 /* ================== WISUDA ================== */
@@ -266,31 +266,23 @@ function tampil(){
 
 /* ================== DISKON ================== */
 function toggleDiskon(){
-  // cek deadline
-  if (new Date() > diskonDeadline){
-    alert("Diskon sudah berakhir");
+  if(layanan.value === "pasfoto"){
+    alert("Diskon tidak berlaku untuk pasfoto");
     return;
   }
 
   diskonAktif = !diskonAktif;
 
-  // aktif/nonaktif tombol kostum
-  tambahKostumBtn.disabled = !diskonAktif || layanan.value !== "umum";
+  btnDiskon.innerText = diskonAktif
+    ? "Diskon Aktif"
+    : "Aktifkan Diskon";
 
-  // hitung ulang sesuai layanan
-  if(layanan.value === "umum"){
-    hitungUmum();
-  }
-  else if(layanan.value === "wisuda"){
-    hitungWisuda();
-  }
-  else if(layanan.value === "prewedding"){
-    hitungPrewedding();
-  }
-  else{
-    // pasfoto TIDAK kena diskon
-    tampil();
-  }
+  // 👉 INI KUNCI UTAMA
+  tambahKostumBtn.disabled = !diskonAktif;
+
+  hitungUmum();
+  hitungWisuda();
+  hitungPrewedding();
 }
 
 /* ================== COUNTDOWN ================== */
@@ -355,6 +347,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
