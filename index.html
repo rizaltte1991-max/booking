@@ -185,42 +185,43 @@ const diskonDeadline = new Date("2026-01-28T22:00:00");
 
 /* ================== UMUM ================== */
 function hitungUmum(){
-  const o = parseInt(orangUmum.value);
-  if(!o) return;
+  const jumlah = Number(orangUmum.value);
+  if(!jumlah) return;
 
-  let h = 0;
+  // HARGA DASAR (KUNCI)
+  totalHarga = hargaUmum[jumlah] || 0;
 
-  if (hargaUmum[o]) {
-    h = hargaUmum[o];
-  } else if (o <= 25) {
-    h = o * 30000;
-  } else {
-    h = o * 25000;
+  // TAMBAH KOSTUM (HANYA SETELAH DISKON)
+  if(diskonAktif && extraKostum > 0){
+    totalHarga += extraKostum * 50000;
   }
 
-  // 🔥 DISKON AKTIF DI SINI
-  totalHarga = diskonAktif ? h * 0.9 : h;
+  // DISKON TERAKHIR
+  if(diskonAktif){
+    totalHarga = totalHarga * 0.9;
+  }
 
-  // info file & kostum (kalau sudah ada)
-  const file = getFileUmum(o);
-  let kostum = o<=3 ? 1 : o<=15 ? 2 : 3;
+  // INFO FILE & KOSTUM
+  const file = getFileUmum(jumlah);
+  const kostum = jumlah<=3 ? 1 : jumlah<=15 ? 2 : 3;
 
   infoUmum.innerHTML = `
-    📸 File: ${file} file
-    <br>👕 Kostum: ${kostum} set (gratis)
-    <br>➕ Tambahan file: Rp25.000 / file
+    📸 File: ${file} file<br>
+    👕 Kostum: ${kostum + extraKostum} set<br>
+    ➕ Tambahan file: Rp25.000 / file
   `;
 
+  total.innerText = "Total: Rp " + Math.round(totalHarga).toLocaleString("id-ID");
+}
   tampil();
 }
 
 function tambahKostum(){
   if(!diskonAktif){
-    alert("Aktifkan diskon dulu");
+    alert("Aktifkan diskon terlebih dahulu");
     return;
   }
-
-  extraKostum += 50000;
+  extraKostum++;
   hitungUmum();
 }
 /* ================== WISUDA ================== */
@@ -271,18 +272,16 @@ function toggleDiskon(){
     return;
   }
 
-  diskonAktif = !diskonAktif;
+  // AKTIFKAN DISKON (BUKAN TOGGLE ULANG-ULANG)
+  diskonAktif = true;
 
-  btnDiskon.innerText = diskonAktif
-    ? "Diskon Aktif"
-    : "Aktifkan Diskon";
+  // TOMBOL KOSTUM AKTIF SETELAH DISKON
+  tambahKostumBtn.disabled = false;
 
-  // 👉 INI KUNCI UTAMA
-  tambahKostumBtn.disabled = !diskonAktif;
-
-  hitungUmum();
-  hitungWisuda();
-  hitungPrewedding();
+  // HITUNG ULANG SESUAI LAYANAN
+  if(layanan.value === "umum") hitungUmum();
+  if(layanan.value === "wisuda") hitungWisuda();
+  if(layanan.value === "prewedding") hitungPrewedding();
 }
 
 /* ================== COUNTDOWN ================== */
@@ -348,6 +347,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
