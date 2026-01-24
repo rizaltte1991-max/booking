@@ -272,18 +272,15 @@ function toggleDiskon(){
     return;
   }
 
-  // AKTIFKAN DISKON (BUKAN TOGGLE ULANG-ULANG)
-  diskonAktif = true;
+  diskonAktif = !diskonAktif;
 
-  // TOMBOL KOSTUM AKTIF SETELAH DISKON
-  tambahKostumBtn.disabled = false;
+  // tombol kostum hanya aktif kalau diskon aktif & foto umum
+  tambahKostumBtn.disabled = !(diskonAktif && layanan.value==="umum");
 
-  // HITUNG ULANG SESUAI LAYANAN
   if(layanan.value === "umum") hitungUmum();
-  if(layanan.value === "wisuda") hitungWisuda();
-  if(layanan.value === "prewedding") hitungPrewedding();
+  else if(layanan.value === "wisuda") hitungWisuda();
+  else if(layanan.value === "prewedding") hitungPrewedding();
 }
-
 /* ================== COUNTDOWN ================== */
 function updateCountdown(){
   const now = new Date();
@@ -347,6 +344,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
