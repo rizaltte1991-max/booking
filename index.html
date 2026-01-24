@@ -182,16 +182,7 @@ const diskonDeadline = new Date("2026-01-28T22:00:00");
 /* ================== UMUM ================== */
 function hitungUmum(){
   const o = parseInt(orangUmum.value);
-  if(!o){
-    infoUmum.innerHTML = `
-      📸 File: -
-      <br>👕 Kostum: -
-      <br>➕ Tambahan file: Rp25.000 / file
-    `;
-    totalHarga = 0;
-    tampil();
-    return;
-  }
+  if(!o) return;
 
   let h = 0;
 
@@ -203,22 +194,19 @@ function hitungUmum(){
     h = o * 25000;
   }
 
-  // JUMLAH FILE
-  const file = getFileUmum(o);
+  // 🔥 DISKON AKTIF DI SINI
+  totalHarga = diskonAktif ? h * 0.9 : h;
 
-  // JUMLAH KOSTUM (INFO SAJA)
-  let kostum = "-";
-  if(o>=1 && o<=3) kostum = "1 set";
-  else if(o>=4 && o<=15) kostum = "2 set";
-  else if(o>=16 && o<=30) kostum = "3 set";
+  // info file & kostum (kalau sudah ada)
+  const file = getFileUmum(o);
+  let kostum = o<=3 ? 1 : o<=15 ? 2 : 3;
 
   infoUmum.innerHTML = `
     📸 File: ${file} file
-    <br>👕 Kostum: ${kostum}
+    <br>👕 Kostum: ${kostum} set (gratis)
     <br>➕ Tambahan file: Rp25.000 / file
   `;
 
-  totalHarga = h;
   tampil();
 }
 
@@ -331,5 +319,6 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
