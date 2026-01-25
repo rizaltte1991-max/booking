@@ -288,9 +288,10 @@ function toggleDiskon(){
   else if(layanan.value === "prewedding") hitungPrewedding();
 }
 /* ================== COUNTDOWN ================== */
+const diskonDeadline = new Date("2026-01-28T22:00:00");
+
 function updateCountdown(){
-  const now = new Date();
-  const s = diskonDeadline - now;
+  const s = diskonDeadline - new Date();
 
   if(s <= 0){
     countdown.innerText = "Diskon berakhir";
@@ -298,10 +299,14 @@ function updateCountdown(){
   }
 
   const hari = Math.floor(s / 86400000);
-  const jam = Math.floor((s % 86400000) / 3600000);
-  countdown.innerText = `Diskon berakhir dalam ${hari} hari ${jam} jam`;
+  const jam  = Math.floor((s % 86400000) / 3600000);
+
+  countdown.innerText =
+    `Diskon berakhir dalam ${hari} hari ${jam} jam`;
 }
-setInterval(updateCountdown,1000);
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
 /* ================== FORM SWITCH ================== */
 function updateForm(){
@@ -350,6 +355,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
