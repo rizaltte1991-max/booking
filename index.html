@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Logaloga Studio Booking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body{
   margin:0;
@@ -36,7 +37,9 @@ button{
 #tambahKostumBtn{
   background:#ffbe0b;
   color:#000;
-  margin-top:6px;
+}
+#btnDiskon{
+  background:#ff006e;
 }
 .info{
   margin-top:8px;
@@ -50,15 +53,10 @@ button{
   font-weight:bold;
   text-align:center;
 }
-#btnDiskon{
-  background:#ff006e;
-  margin-top:10px;
-}
 #countdown{
   text-align:center;
-  margin-top:8px;
+  margin-top:10px;
   color:#ffd700;
-  font-size:13px;
 }
 </style>
 </head>
@@ -93,11 +91,11 @@ button{
   <input type="number" id="orangUmum" min="1" max="30">
 
   <button id="btnDiskon" onclick="toggleDiskon()">Aktifkan Diskon</button>
+
   <button id="tambahKostumBtn" onclick="tambahKostum()" disabled>
     Tambah Kostum +50.000
   </button>
 
-  <!-- ✅ SATU-SATUNYA COUNTDOWN -->
   <div id="countdown"></div>
 
   <div class="info" id="infoUmum">
@@ -132,6 +130,9 @@ button{
     <option value="680000">Rp680.000 | Kostum 2 | 35 file | Bonus: 12R 1</option>
     <option value="800000">Rp800.000 | Kostum 3 | 45 file | Bonus lengkap</option>
   </select>
+  <div class="info">
+    Tambahan file: Rp25.000 / file
+  </div>
 </div>
 
 <!-- PASFOTO -->
@@ -151,11 +152,13 @@ button{
 </div>
 
 <div id="total">Total: -</div>
+
 <button onclick="kirimWA()">Kirim WhatsApp</button>
+
 </div>
 
 <script>
-/* ================== DATA ================== */
+/* ================= DATA ================= */
 const hargaUmum={
   1:100000,2:200000,3:300000,4:335000,5:370000,
   6:400000,7:420000,8:450000,9:475000,10:500000,
@@ -178,40 +181,93 @@ let extraKostum=0;
 let diskonAktif=false;
 const diskonDeadline=new Date("2026-01-28T22:00:00");
 
-/* ================== UMUM ================== */
+/* ================= FOTO UMUM ================= */
 function hitungUmum(){
   const j=Number(orangUmum.value);
   if(!j){ total.innerText="Total: -"; return; }
 
   let dasar=hargaUmum[j]||0;
-  let diskon= diskonAktif ? dasar*0.9 : dasar;
-  totalHarga=diskon + (extraKostum*50000);
+  let hargaDiskon=diskonAktif?dasar*0.9:dasar;
 
-  const kostum=j<=3?1:j<=15?2:3;
-  infoUmum.innerHTML=
-    `📸 File: ${getFileUmum(j)} file<br>
-     👕 Kostum: ${kostum+extraKostum} set<br>
-     ➕ Tambahan file: Rp25.000 / file`;
+  totalHarga=hargaDiskon+(extraKostum*50000);
+
+  const file=getFileUmum(j);
+  const kostumGratis=j<=3?1:j<=15?2:3;
+
+  infoUmum.innerHTML=`
+    📸 File: ${file} file<br>
+    👕 Kostum: ${kostumGratis+extraKostum} set<br>
+    ➕ Tambahan file: Rp25.000 / file
+  `;
 
   total.innerText="Total: Rp "+Math.round(totalHarga).toLocaleString("id-ID");
 }
 
-function tambahKostum(){
-  if(!diskonAktif){ alert("Aktifkan diskon dulu"); return; }
-  extraKostum++; hitungUmum();
-}
-
-/* ================== DISKON ================== */
 function toggleDiskon(){
-  if(layanan.value==="pasfoto"){ alert("Diskon tidak berlaku"); return; }
+  if(layanan.value!=="umum"){ alert("Diskon hanya untuk Foto Umum"); return; }
   diskonAktif=!diskonAktif;
-  tambahKostumBtn.disabled=!(diskonAktif&&layanan.value==="umum");
+  tambahKostumBtn.disabled=!diskonAktif;
   hitungUmum();
 }
 
-/* ================== COUNTDOWN (FIX) ================== */
+function tambahKostum(){
+  if(!diskonAktif) return alert("Aktifkan diskon dulu");
+  extraKostum++;
+  hitungUmum();
+}
+
+/* ================= WISUDA ================= */
+function hitungWisuda(){
+  let h=Number(paketWisuda.value);
+  let max=h===350000?10:12;
+  let o=Number(orangWisuda.value)||0;
+  if(o>max) h+=(o-max)*25000;
+  totalHarga=h;
+  total.innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+}
+
+/* ================= PREWEDDING ================= */
+function hitungPrewedding(){
+  totalHarga=Number(paketPrewedding.value);
+  total.innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+}
+
+/* ================= PASFOTO ================= */
+function hitungPasfoto(){
+  let t=Number(jenisPasfoto.value);
+  if(gantiWarna.checked) t+=20000;
+  if(bersihkanWajah.checked) t+=10000;
+  if(editDasi.checked) t+=20000;
+  t+=(Number(jumlahCetak.value)||0)*3000;
+  totalHarga=t;
+  total.innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+}
+
+/* ================= FORM SWITCH ================= */
+function updateForm(){
+  formUmum.style.display=layanan.value==="umum"?"block":"none";
+  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
+  formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
+  formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
+  total.innerText="Total: -";
+  extraKostum=0;
+}
+layanan.onchange=updateForm;
+
+/* ================= EVENT ================= */
+orangUmum.oninput=hitungUmum;
+paketWisuda.onchange=hitungWisuda;
+orangWisuda.oninput=hitungWisuda;
+paketPrewedding.onchange=hitungPrewedding;
+jenisPasfoto.onchange=hitungPasfoto;
+gantiWarna.onchange=hitungPasfoto;
+bersihkanWajah.onchange=hitungPasfoto;
+editDasi.onchange=hitungPasfoto;
+jumlahCetak.oninput=hitungPasfoto;
+
+/* ================= COUNTDOWN ================= */
 function updateCountdown(){
-  const s = diskonDeadline - new Date();
+  const s=diskonDeadline-new Date();
   if(s<=0){ countdown.innerText="Diskon berakhir"; return; }
   const h=Math.floor(s/86400000);
   const j=Math.floor((s%86400000)/3600000);
@@ -220,23 +276,13 @@ function updateCountdown(){
 updateCountdown();
 setInterval(updateCountdown,1000);
 
-/* ================== SWITCH ================== */
-function updateForm(){
-  formUmum.style.display=layanan.value==="umum"?"block":"none";
-  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
-  formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
-  formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
-  totalHarga=0; extraKostum=0; total.innerText="Total: -";
-}
-layanan.onchange=updateForm;
-orangUmum.oninput=hitungUmum;
-
-/* ================== WA ================== */
+/* ================= WA ================= */
 function kirimWA(){
   window.open("https://wa.me/6282199327646?text="+encodeURIComponent(
     `Halo Logaloga Studio\nTotal: Rp ${totalHarga.toLocaleString("id-ID")}`
   ));
 }
+
 updateForm();
 </script>
 </body>
