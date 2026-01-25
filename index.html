@@ -193,14 +193,17 @@ function hitungUmum(){
 
   // ===== HARGA DASAR =====
   if(jumlah <= 15){
-    totalHarga = hargaUmum[jumlah];
-  } 
-  else if(jumlah <= 25){
-    totalHarga = hargaUmum[15] + (jumlah - 15) * 30000;
-  } 
-  else if(jumlah <= 30){
-    totalHarga = hargaUmum[15] + (10 * 30000) + (jumlah - 25) * 25000;
-  }
+  totalHarga = hargaUmum[jumlah];
+}
+else if(jumlah === 16){
+  totalHarga = hargaUmum[16]; // 560.000 (KUNCI)
+}
+else if(jumlah <= 25){
+  totalHarga = hargaUmum[16] + (jumlah - 16) * 30000;
+}
+else if(jumlah <= 30){
+  totalHarga = hargaUmum[16] + (9 * 30000) + (jumlah - 25) * 25000;
+}
 
   // ===== TAMBAH KOSTUM (HANYA JIKA DISKON AKTIF) =====
   if(diskonAktif && extraKostum > 0){
@@ -310,4 +313,5 @@ updateForm();
 </script>
 </body>
 </html>
+
 
