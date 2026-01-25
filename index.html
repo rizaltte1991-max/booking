@@ -33,10 +33,10 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
+#btnDiskon{background:#ff006e}
 #tambahKostumBtn{
   background:#ffbe0b;
   color:#000;
-  margin-top:6px;
 }
 .info{
   margin-top:8px;
@@ -50,13 +50,9 @@ button{
   font-weight:bold;
   text-align:center;
 }
-#diskonBtn{
-  background:#ff006e;
-  margin-top:10px;
-}
 #countdown{
   text-align:center;
-  margin-top:10px;
+  margin-top:8px;
   color:#ffd700;
 }
 </style>
@@ -91,13 +87,13 @@ button{
   <label>Jumlah Orang</label>
   <input type="number" id="orangUmum" min="1" max="30">
 
-  <button id="btnDiskon" onclick="toggleDiskon()">Aktifkan Diskon</button>
+  <button id="btnDiskon" onclick="toggleDiskon()">Aktifkan Diskon 10%</button>
 
-<button id="tambahKostumBtn" onclick="tambahKostum()" disabled>
-  Tambah Kostum +50.000
-</button>
+  <button id="tambahKostumBtn" onclick="tambahKostum()" disabled>
+    Tambah Kostum +50.000
+  </button>
 
-<div id="countdown"></div>
+  <div id="countdown"></div>
 
   <div class="info" id="infoUmum">
     📸 File: -<br>
@@ -118,23 +114,19 @@ button{
   <input type="number" id="orangWisuda" min="1">
 
   <div class="info">
-    Tambahan orang: Rp25.000 / orang di atas maksimal<br>
+    Tambahan orang: Rp25.000 / orang<br>
     Tambahan file: Rp25.000 / file
   </div>
 </div>
 
 <!-- PREWEDDING -->
-<div class="form-section" id="formPrewedding" style="display:none">
+<div id="formPrewedding" style="display:none">
   <label>Paket Prewedding (2 Orang)</label>
   <select id="paketPrewedding">
-    <option value="400000">Rp400.000 | Kostum 1 | 25 file | Bonus: 10R 1 + 3R 2</option>
-    <option value="680000">Rp680.000 | Kostum 2 | 35 file | Bonus: 12R 1</option>
-    <option value="800000">Rp800.000 | Kostum 3 | 45 file | Bonus lengkap</option>
+    <option value="400000">Rp400.000 | Kostum 1 | 25 file</option>
+    <option value="680000">Rp680.000 | Kostum 2 | 35 file</option>
+    <option value="800000">Rp800.000 | Kostum 3 | 45 file</option>
   </select>
-  <div style="margin-top:8px;font-size:13px;color:#ffd700">
-    * Paket berlaku untuk 2 orang<br>
-    * Tambahan file: Rp25.000 / file
-  </div>
 </div>
 
 <!-- PASFOTO -->
@@ -153,221 +145,108 @@ button{
   <input type="number" id="jumlahCetak" min="0">
 </div>
 
-<div id="countdown"></div>
 <div id="total">Total: -</div>
-
 <button onclick="kirimWA()">Kirim WhatsApp</button>
 </div>
 
 <script>
-/* ================== DATA ================== */
+/* ========= DATA ========= */
 const hargaUmum = {
   1:100000,2:200000,3:300000,4:335000,5:370000,
   6:400000,7:420000,8:450000,9:475000,10:500000,
   11:525000,12:550000,13:575000,14:600000,15:625000,
   16:560000
 };
-  function getFileUmum(jumlah){
-  if(jumlah===1) return 7;
-  if(jumlah===2) return 15;
-  if(jumlah===3) return 20;
-  if(jumlah===4) return 25;
-  if(jumlah>=5 && jumlah<=10) return 25;
-  if(jumlah>=11 && jumlah<=30) return 30;
+
+function getFileUmum(j){
+  if(j===1) return 7;
+  if(j===2) return 15;
+  if(j===3) return 20;
+  if(j>=4 && j<=10) return 25;
+  if(j>=11) return 30;
   return "-";
 }
-let totalHarga = 0;
-let extraKostum = 0;
-let diskonAktif = false;
+
+let totalHarga=0, extraKostum=0, diskonAktif=false;
 const diskonDeadline = new Date("2026-01-28T22:00:00");
 
-/* ================== UMUM ================== */
+/* ========= FOTO UMUM ========= */
 function hitungUmum(){
-  const jumlah = Number(orangUmum.value);
-
-  // ⛔ kalau kosong
-  if(!jumlah){
-    totalHarga = 0;
-    infoUmum.innerHTML = `
-      📸 File: -
-      <br>👕 Kostum: -
-      <br>➕ Tambahan file: Rp25.000 / file
-    `;
-    total.innerText = "Total: -";
+  const j = Number(orangUmum.value);
+  if(!j){
+    total.innerText="Total: -";
     return;
   }
 
-  // HARGA DASAR (KUNCI MATI)
-  let hargaDasar = hargaUmum[jumlah] || 0;
+  const hargaDasar = hargaUmum[j] || 0;
+  const hargaDiskon = diskonAktif ? hargaDasar*0.9 : hargaDasar;
+  totalHarga = hargaDiskon + (extraKostum*50000);
 
-  // DISKON HANYA KE HARGA DASAR
-  let hargaSetelahDiskon = diskonAktif
-    ? hargaDasar * 0.9
-    : hargaDasar;
+  const kostumGratis = j<=3?1:j<=15?2:3;
 
-  // TAMBAH KOSTUM (TIDAK KENA DISKON)
-  totalHarga = hargaSetelahDiskon + (extraKostum * 50000);
-
-  // INFO FILE & KOSTUM
-  const file = getFileUmum(jumlah);
-  const kostumGratis = jumlah<=3 ? 1 : jumlah<=15 ? 2 : 3;
-
-  infoUmum.innerHTML = `
-    📸 File: ${file} file
-    <br>👕 Kostum: ${kostumGratis + extraKostum} set
-    <br>➕ Tambahan file: Rp25.000 / file
+  infoUmum.innerHTML=`
+    📸 File: ${getFileUmum(j)} file<br>
+    👕 Kostum: ${kostumGratis+extraKostum} set<br>
+    ➕ Tambahan file: Rp25.000 / file
   `;
 
-  total.innerText =
-    "Total: Rp " + Math.round(totalHarga).toLocaleString("id-ID");
+  total.innerText="Total: Rp "+Math.round(totalHarga).toLocaleString("id-ID");
 }
 
 function tambahKostum(){
-  if(!diskonAktif){
-    alert("Aktifkan diskon terlebih dahulu");
-    return;
-  }
+  if(!diskonAktif) return alert("Aktifkan diskon dulu");
   extraKostum++;
   hitungUmum();
 }
-/* ================== WISUDA ================== */
-function hitungWisuda(){
-  let h = parseInt(paketWisuda.value);
-  let max = h===350000?10:12;
-  let o = parseInt(orangWisuda.value)||0;
-  if(o>max) h += (o-max)*25000;
-  totalHarga = h;
-  tampil();
-}
 
-function updateBonusWisuda(){
-  const paket = paketWisuda.options[paketWisuda.selectedIndex];
-  const bonus = paket.getAttribute("data-bonus") || "-";
-  bonusWisuda.innerText = `Bonus: ${bonus}`;
-  hitungWisuda();
-}
-
-/* ================== PREWEDDING ================== */
-function hitungPrewedding(){
-  totalHarga = parseInt(paketPrewedding.value);
-  tampil();
-}
-
-/* ================== PASFOTO ================== */
-function hitungPasfoto(){
-  let h = parseInt(jenisPasfoto.value);
-  if(gantiWarna.checked) h+=20000;
-  if(bersihkanWajah.checked) h+=10000;
-  if(editDasi.checked) h+=20000;
-  h += (parseInt(jumlahCetak.value)||0)*3000;
-  totalHarga = h;
-  tampil();
-}
-
-/* ================== DISPLAY TOTAL ================== */
-function tampil(){
-  total.innerText = totalHarga>0
-    ? "Total: Rp "+totalHarga.toLocaleString("id-ID")
-    : "Total: -";
-}
-
-/* ================== DISKON ================== */
+/* ========= DISKON ========= */
 function toggleDiskon(){
-  if(layanan.value === "pasfoto"){
-    alert("Diskon tidak berlaku untuk pasfoto");
-    return;
-  }
-
-  diskonAktif = !diskonAktif;
-
-  // tombol kostum hanya aktif kalau diskon aktif & foto umum
-  tambahKostumBtn.disabled = !(diskonAktif && layanan.value==="umum");
-
-  if(layanan.value === "umum") hitungUmum();
-  else if(layanan.value === "wisuda") hitungWisuda();
-  else if(layanan.value === "prewedding") hitungPrewedding();
+  if(layanan.value==="pasfoto") return alert("Diskon tidak berlaku");
+  diskonAktif=!diskonAktif;
+  btnDiskon.innerText=diskonAktif?"Diskon Aktif":"Aktifkan Diskon 10%";
+  tambahKostumBtn.disabled=!(diskonAktif && layanan.value==="umum");
+  hitungUmum();
 }
-/* ================== COUNTDOWN ================== */
-const diskonDeadline = new Date("2026-01-28T22:00:00");
 
+/* ========= COUNTDOWN ========= */
 function updateCountdown(){
-  const s = diskonDeadline - new Date();
-
-  if(s <= 0){
-    countdown.innerText = "Diskon berakhir";
-    return;
-  }
-
-  const hari = Math.floor(s / 86400000);
-  const jam  = Math.floor((s % 86400000) / 3600000);
-
-  countdown.innerText =
-    `Diskon berakhir dalam ${hari} hari ${jam} jam`;
+  const s=diskonDeadline-new Date();
+  if(s<=0){countdown.innerText="Diskon berakhir";return;}
+  countdown.innerText=
+    `Diskon berakhir dalam ${Math.floor(s/86400000)} hari ${Math.floor((s%86400000)/3600000)} jam`;
 }
+setInterval(updateCountdown,1000);updateCountdown();
 
-updateCountdown();
-setInterval(updateCountdown, 1000);
-
-/* ================== FORM SWITCH ================== */
+/* ========= FORM SWITCH ========= */
 function updateForm(){
-  formUmum.style.display = layanan.value==="umum"?"block":"none";
-  formWisuda.style.display = layanan.value==="wisuda"?"block":"none";
-  formPrewedding.style.display = layanan.value==="prewedding"?"block":"none";
-  formPasfoto.style.display = layanan.value==="pasfoto"?"block":"none";
-  totalHarga=0;
-  extraKostum=0;
-  tampil();
-  updateBonusWisuda();
+  formUmum.style.display=layanan.value==="umum"?"block":"none";
+  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
+  formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
+  formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
+  totalHarga=extraKostum=0;diskonAktif=false;
+  btnDiskon.innerText="Aktifkan Diskon 10%";
+  tambahKostumBtn.disabled=true;
+  total.innerText="Total: -";
 }
+layanan.onchange=updateForm;
+orangUmum.oninput=hitungUmum;
 
-/* ================== EVENT LISTENERS ================== */
-layanan.onchange = updateForm;
-orangUmum.oninput = hitungUmum;
-paketWisuda.onchange = updateBonusWisuda;
-orangWisuda.oninput = hitungWisuda;
-paketPrewedding.onchange = hitungPrewedding;
-jenisPasfoto.onchange = hitungPasfoto;
-gantiWarna.onchange = hitungPasfoto;
-bersihkanWajah.onchange = hitungPasfoto;
-editDasi.onchange = hitungPasfoto;
-jumlahCetak.oninput = hitungPasfoto;
-
-/* ================== WA ================== */
+/* ========= WA ========= */
 function kirimWA(){
-  if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value){
-    alert("Lengkapi data");
-    return;
-  }
-  const msg=`Halo Logaloga Studio
+  if(!nama.value||!hp.value||!tanggalBooking.value||!jamBooking.value)
+    return alert("Lengkapi data");
+  window.open("https://wa.me/6282199327646?text="+encodeURIComponent(
+`Halo Logaloga Studio
 Nama: ${nama.value}
 WA: ${hp.value}
 Tanggal: ${tanggalBooking.value}
 Jam: ${jamBooking.value}
 Layanan: ${layanan.value}
-Total: Rp ${totalHarga.toLocaleString("id-ID")}`;
-  window.open("https://wa.me/6282199327646?text="+encodeURIComponent(msg));
+Total: Rp ${Math.round(totalHarga).toLocaleString("id-ID")}`
+));
 }
 
 updateForm();
-  tambahKostumBtn.disabled = !diskonAktif || layanan.value !== "umum";
-  tambahKostumBtn.disabled = true;
- 
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
