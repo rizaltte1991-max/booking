@@ -304,14 +304,48 @@ setInterval(updateCountdown,1000);
 
 /* ================= WA ================= */
 function kirimWA(){
-  window.open("https://wa.me/6282199327646?text="+encodeURIComponent(
-    `Halo Logaloga Studio\nTotal: Rp ${totalHarga.toLocaleString("id-ID")}`
-  ));
+
+  if(!nama.value || !hp.value || !tanggalBooking.value || !jamBooking.value){
+    alert("Lengkapi data booking");
+    return;
+  }
+
+  let detail = "";
+
+  if(layanan.value === "umum"){
+    detail = `Jumlah Orang: ${orangUmum.value} orang`;
+  }
+  else if(layanan.value === "wisuda"){
+    detail = `Jumlah Orang: ${orangWisuda.value || 0} orang`;
+  }
+  else if(layanan.value === "prewedding"){
+    detail = "Paket Prewedding (2 orang)";
+  }
+  else if(layanan.value === "pasfoto"){
+    detail = `Jenis Pasfoto: ${jenisPasfoto.options[jenisPasfoto.selectedIndex].text}`;
+  }
+
+  const pesan = `
+Halo Logaloga Studio
+Nama: ${nama.value}
+WA: ${hp.value}
+Tanggal: ${tanggalBooking.value}
+Jam: ${jamBooking.value}
+Layanan: ${layanan.options[layanan.selectedIndex].text}
+${detail}
+Total: Rp ${totalHarga.toLocaleString("id-ID")}
+  `.trim();
+
+  window.open(
+    "https://wa.me/6282199327646?text=" +
+    encodeURIComponent(pesan)
+  );
 }
 
 updateForm();
 </script>
 </body>
 </html>
+
 
 
