@@ -186,26 +186,28 @@ function hitungUmum(){
   const jumlah = Number(orangUmum.value);
   if(!jumlah){
     total.innerText = "Total: -";
+    totalHarga = 0;
     return;
   }
 
-  let totalHarga = 0;
+  // ⬇️ PAKAI totalHarga GLOBAL
+  totalHarga = 0;
 
   // ===== HARGA DASAR =====
   if(jumlah <= 15){
-  totalHarga = hargaUmum[jumlah];
-}
-else if(jumlah === 16){
-  totalHarga = hargaUmum[16]; // 560.000 (KUNCI)
-}
-else if(jumlah <= 25){
-  totalHarga = hargaUmum[16] + (jumlah - 16) * 30000;
-}
-else if(jumlah <= 30){
-  totalHarga = hargaUmum[16] + (9 * 30000) + (jumlah - 25) * 25000;
-}
+    totalHarga = hargaUmum[jumlah];
+  }
+  else if(jumlah === 16){
+    totalHarga = hargaUmum[16]; // 560.000 (KUNCI)
+  }
+  else if(jumlah <= 25){
+    totalHarga = hargaUmum[16] + (jumlah - 16) * 30000;
+  }
+  else if(jumlah <= 30){
+    totalHarga = hargaUmum[16] + (9 * 30000) + (jumlah - 25) * 25000;
+  }
 
-  // ===== TAMBAH KOSTUM (HANYA JIKA DISKON AKTIF) =====
+  // ===== TAMBAH KOSTUM =====
   if(diskonAktif && extraKostum > 0){
     totalHarga += extraKostum * 50000;
   }
@@ -215,7 +217,7 @@ else if(jumlah <= 30){
     totalHarga *= 0.9;
   }
 
-  // ===== INFO FILE & KOSTUM =====
+  // ===== INFO =====
   const file = getFileUmum(jumlah);
   const kostumGratis = jumlah <= 3 ? 1 : jumlah <= 15 ? 2 : 3;
 
@@ -346,6 +348,7 @@ updateForm();
 </script>
 </body>
 </html>
+
 
 
 
