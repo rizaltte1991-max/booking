@@ -14,7 +14,6 @@ button{background:#3a86ff;color:#fff;font-weight:bold;cursor:pointer;}
 #btnDiskon{background:#ff006e;}
 .info{margin-top:8px;font-size:13px;color:#ffd700;text-align:center;}
 #total{margin-top:15px;font-size:18px;font-weight:bold;text-align:center;}
-#countdown{text-align:center;margin-top:10px;color:#ffd700;}
 </style>
 </head>
 <body>
@@ -29,6 +28,7 @@ button{background:#3a86ff;color:#fff;font-weight:bold;cursor:pointer;}
 <label>Layanan</label>
 <select id="layanan">
   <option value="umum">Foto Umum</option>
+  <option value="wisuda">Wisuda</option>
   <option value="prewedding">Prewedding</option>
   <option value="pasfoto">Pasfoto</option>
 </select>
@@ -39,8 +39,19 @@ button{background:#3a86ff;color:#fff;font-weight:bold;cursor:pointer;}
   <input type="number" id="orangUmum" min="1" max="30">
   <button id="btnDiskon" onclick="toggleDiskon()">Aktifkan Diskon</button>
   <button id="tambahKostumBtn" onclick="tambahKostum()" disabled>Tambah Kostum +50.000</button>
-  <div id="countdown"></div>
   <div class="info" id="infoUmum">📸 File: -<br>👕 Kostum: -<br>➕ Tambahan file: Rp25.000 / file</div>
+</div>
+
+<!-- WISUDA -->
+<div id="formWisuda" style="display:none">
+  <label>Paket Wisuda</label>
+  <select id="paketWisuda">
+    <option value="350000" data-max="10">Rp350.000 – 15 file – 10 orang – Bonus 10R 1 Lembar</option>
+    <option value="675000" data-max="12">Rp675.000 – 30 file – 12 orang – Bonus 10R 2 Lembar</option>
+  </select>
+  <label>Jumlah Orang</label>
+  <input type="number" id="orangWisuda" min="1">
+  <div class="info" id="infoWisuda">Tambahan orang: Rp25.000 / orang di atas maksimal<br>Tambahan file: Rp25.000 / file</div>
 </div>
 
 <!-- PREWEDDING -->
@@ -51,8 +62,6 @@ button{background:#3a86ff;color:#fff;font-weight:bold;cursor:pointer;}
     <option value="680000" data-kostum="2" data-file="35">Rp680.000 | Kostum 2 | 35 file | Bonus: 12R 1</option>
     <option value="800000" data-kostum="3" data-file="45">Rp800.000 | Kostum 3 | 45 file | Bonus lengkap</option>
   </select>
-  <label>Tambahan File</label>
-  <input type="number" id="tambahanFilePrewedding" min="0" value="0">
   <div class="info" id="infoPrewedding">📸 File: -<br>👕 Kostum: -<br>➕ Tambahan file: Rp25.000 / file</div>
 </div>
 
@@ -76,7 +85,6 @@ button{background:#3a86ff;color:#fff;font-weight:bold;cursor:pointer;}
 
 <script>
 let totalHarga=0, extraKostum=0, diskonAktif=false;
-const diskonDeadline=new Date("2026-01-28T22:00:00");
 
 // ================= FOTO UMUM =================
 function getFileUmum(j){
@@ -123,15 +131,25 @@ function hitungUmum(){
 function toggleDiskon(){if(layanan.value!=="umum"){alert("Diskon hanya untuk Foto Umum");return;} diskonAktif=!diskonAktif; tambahKostumBtn.disabled=!diskonAktif; hitungUmum();}
 function tambahKostum(){if(!diskonAktif)return alert("Aktifkan diskon dulu"); extraKostum++; hitungUmum();}
 
+// ================= WISUDA =================
+function hitungWisuda(){
+  const paket = paketWisuda.options[paketWisuda.selectedIndex];
+  let h = Number(paket.value);
+  const max = Number(paket.getAttribute("data-max"));
+  const o = Number(orangWisuda.value)||0;
+  if(o>max) h += (o-max)*25000;
+  totalHarga = h;
+  total.innerText="Total: Rp "+totalHarga.toLocaleString("id-ID");
+}
+
 // ================= PREWEDDING =================
 function hitungPrewedding(){
   const paket = paketPrewedding.options[paketPrewedding.selectedIndex];
   const hargaDasar = Number(paket.value);
   const kostum = paket.getAttribute("data-kostum");
   const file = paket.getAttribute("data-file");
-  const tambahanFile = Number(document.getElementById("tambahanFilePrewedding").value)||0;
 
-  totalHarga = hargaDasar + tambahanFile*25000;
+  totalHarga = hargaDasar;
 
   infoPrewedding.innerHTML = `📸 File: ${file} file<br>👕 Kostum: ${kostum} set<br>➕ Tambahan file: Rp25.000 / file`;
 
@@ -152,6 +170,7 @@ function hitungPasfoto(){
 // ================= FORM SWITCH =================
 function updateForm(){
   formUmum.style.display=layanan.value==="umum"?"block":"none";
+  formWisuda.style.display=layanan.value==="wisuda"?"block":"none";
   formPrewedding.style.display=layanan.value==="prewedding"?"block":"none";
   formPasfoto.style.display=layanan.value==="pasfoto"?"block":"none";
   total.innerText="Total: -"; extraKostum=0;
@@ -160,24 +179,14 @@ layanan.onchange=updateForm;
 
 // ================= EVENTS =================
 orangUmum.oninput=hitungUmum;
+paketWisuda.onchange=hitungWisuda;
+orangWisuda.oninput=hitungWisuda;
 paketPrewedding.onchange=hitungPrewedding;
-document.getElementById("tambahanFilePrewedding").oninput=hitungPrewedding;
 jenisPasfoto.onchange=hitungPasfoto;
 gantiWarna.onchange=hitungPasfoto;
 bersihkanWajah.onchange=hitungPasfoto;
 editDasi.onchange=hitungPasfoto;
 jumlahCetak.oninput=hitungPasfoto;
-
-// ================= COUNTDOWN =================
-function updateCountdown(){
-  const s = diskonDeadline - new Date();
-  if(s<=0){countdown.innerText="Diskon berakhir"; return;}
-  const h=Math.floor(s/86400000);
-  const j=Math.floor((s%86400000)/3600000);
-  countdown.innerText=`Diskon berakhir dalam ${h} hari ${j} jam`;
-}
-updateCountdown();
-setInterval(updateCountdown,1000);
 
 // ================= WA =================
 function kirimWA(){
@@ -192,13 +201,21 @@ function kirimWA(){
 File: ${file} file
 Kostum: ${totalKostum} set`;
   }
+  else if(layanan.value==="wisuda"){
+    const paket = paketWisuda.options[paketWisuda.selectedIndex];
+    const max = Number(paket.getAttribute("data-max"));
+    const o = Number(orangWisuda.value)||0;
+    let hargaFinal = Number(paket.value);
+    if(o>max) hargaFinal += (o-max)*25000;
+    detail = `Paket Wisuda: ${paket.text}
+Jumlah Orang: ${o} orang
+Total: Rp ${hargaFinal.toLocaleString("id-ID")}`;
+  }
   else if(layanan.value==="prewedding"){
     const paket = paketPrewedding.options[paketPrewedding.selectedIndex];
     const kostum = paket.getAttribute("data-kostum");
     const file = paket.getAttribute("data-file");
-    const tambahanFile = Number(document.getElementById("tambahanFilePrewedding").value)||0;
     detail = `Paket Prewedding: ${paket.text}
-Tambahan file: ${tambahanFile} file
 Kostum: ${kostum} set
 File: ${file} file`;
   }
